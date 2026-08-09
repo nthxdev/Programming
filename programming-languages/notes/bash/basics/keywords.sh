@@ -1,0 +1,25 @@
+: << 'EOF'
+!
+[[ ]]
+(( ))
+
+case
+coproc
+do
+done
+elif
+else
+esac
+fi
+for
+function
+if
+in
+select
+then
+time
+until
+while
+
+{ }
+EOF
