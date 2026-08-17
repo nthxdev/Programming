@@ -21,6 +21,7 @@ Thumbs.db
 # Python
 # =========================
 __pycache__/
+*.pyc
 *.py[cod]
 *.pyo
 *.pyd
@@ -29,6 +30,7 @@ venv/
 ENV/
 env/
 *.egg-info/
+
 
 # =========================
 # C / C++

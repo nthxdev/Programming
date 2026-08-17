@@ -1,3 +1,4 @@
+# wsl -u root
 # built-in Python module that provides access to the Python interpreter and system-level information.
 import sys 
 def main():
@@ -265,6 +266,10 @@ def main():
 # Basics & Where to define:
 # Defined using the 'def' keyword. They must be defined BEFORE they are called in the script.
 # Python functions are first-class objects (they can be assigned to variables, passed as arguments).
+
+# in python everything is an object so mutability of arguments in function depends on the type of object passed. 
+# Immutable objects (can't change): -> int, float, bool, str, tuple, frozenset, bytes
+# Mutable objects (can change): -> list, dict, set, bytearray, most class instances
 
 # Defining, Parameters, and Type Hinting (Python 3.5+):
 # Syntax: def function_name(param: type) -> return_type:
