@@ -3,6 +3,7 @@
 A collection of language-specific notes, implementations, and practice programs. Each language includes an `xyz.*` file for Basic concepts and Folders for implementations.
 
 **Current Repo Structure :**
+```Markdown
 .
 ├── bash
 │   ├── basics
@@ -211,3 +212,4 @@ A collection of language-specific notes, implementations, and practice programs.
     │   ├── swap_two_variables.ts
     │   └── word_freq.ts
     └── xyz.ts
+```
