@@ -1,4 +1,52 @@
 // ==========================================
+// Intro to JavaScript & TypeScript
+// ==========================================
+
+// JAVASCRIPT
+// - A programming language that allows web pages to be dynamic.
+// - Interpreted, not compiled: the interpreter (e.g. a browser) parses
+//   the code and turns it into code the machine can run, so it works
+//   on any browser on any computer.
+// - Not just for the browser. Runtimes like Node.js and Deno let you
+//   write, launch, and serve requests on webservers. Frameworks like
+//   Electron use JS to write cross-platform apps for Windows, Linux,
+//   macOS. Mobile dev is possible via React Native, Ionic, and Expo
+//   (Android, iOS, and web at once).
+// - ECMAScript is the standard that defines JavaScript.
+// - Starting with the 6th edition (ES2015/ES6) in 2015, a new edition
+//   is released each year. ES6 was a major update: template strings,
+//   arrow functions, cleaner class syntax.
+// - New syntax each year means support is often incomplete in current
+//   browsers and the latest Node.js. Tools like Babel offer
+//   transpilation for most features, letting you write as if it's
+//   the future.
+
+// TYPESCRIPT
+// - A superset of JavaScript, created at Microsoft out of frustration
+//   developing large-scale applications in JS.
+// - In a large JS project it's hard to know what properties your own
+//   objects have, what arguments functions take (and their types).
+//   Since JS code can't be intelligently inspected, using an npm
+//   package means keeping docs open to know its methods and args.
+//   TS solves these issues.
+// - Open-source, hosted on GitHub. Supports tools for any browser and
+//   Node, on any host, any OS. Compiles to readable, standards-based
+//   JavaScript.
+// - Adds a flexible type system to JS, plus interfaces (custom types),
+//   and modifies the syntax of some ECMAScript features like classes.
+// - Types are optional and flexible (e.g. an argument can be a string
+//   OR a number). Types enable editor tooling like code completion
+//   and method detection, in your own code and in packages you use.
+// - Supports many upcoming ECMAScript features (e.g. async/await).
+//   Can be written in Object Oriented or Functional styles.
+//   Compatible with all existing JS packages. Transpiles to clean,
+//   readable JS.
+
+// ==========================================
+// Practices & Conventions
+// ==========================================
+// variables are always written in camelCase; constants are written in SCREAMING_SNAKE_CASE
+// ==========================================
 // Code Structure
 // ==========================================
 // Imports
@@ -43,7 +91,7 @@ comment
  * @param a First number
  * @param b Second number
  * @returns The sum.
- */
+*/
 function docAdd(a: number, b: number): number {
   return a + b;
 }
@@ -55,6 +103,7 @@ console.log(docAdd(5, 10));
 // ==========================================
 /*
 - JS/TS Variable Declarations & Scope Mechanics:
+Variables in JavaScript can be defined using the const, let or var keyword.
 - `let`: Block-scoped. Subject to Temporal Dead Zone (TDZ). Reassignable.
 - `const`: Block-scoped. Immutable binding (the variable identifier cannot be reassigned), 
 - but the contents of objects/arrays it points to ARE mutable.
@@ -64,6 +113,9 @@ console.log(docAdd(5, 10));
 let myLet: string = "Block scoped";
 const MY_CONST: number = 100; // Cannot do MY_CONST = 101;
 var legacyVar: boolean = false; // Hoisted, avoid.
+
+// Const :-
+// constant assignment / binding and constant value
 
 // ==========================================
 // Data Types
@@ -120,10 +172,28 @@ console.log(`Binary: ${numBinary}`);
 // Arbitrary-precision integers. Allocates dynamic heap space to process numbers beyond the Safe Integer Limit ($\pm(2^{53} - 1)$).
 let bigIntVal: bigint = 9007199254740991n; // 'n' suffix
 console.log(`bigint: ${bigIntVal}`);
+// Rounding
+// There is a built-in global object called Math that provides various rounding functions.
+// For example, you can round down (floor) or round up (ceil) decimal numbers to nearest whole numbers
+Math.floor(234.34); // => 234
+Math.ceil(234.34); // => 235
 
-// String (UTF-16)
-// Immutable sequences of 16-bit UTF-16 code units, allocated and deduplicated via internal V8 string interning.
 // 3. String: UTF-16 code units.
+// String (UTF-16) -> Immutable sequences of 16-bit UTF-16 code units, allocated and deduplicated via internal V8 string interning.
+// Creating a string
+'Hello, World!'
+"Hello, World!"
+// A string can be treated as index to acess string value. 
+'cat'[1];
+// use .length to acess the length of string
+'cat'.length;
+// to concate use 
+'I like' + ' ' + 'cats.';
+// some string methods
+// - toUpperCase and toLowerCase - change the case of all characters
+// - trim - remove whitespace at the beginning and end
+// - includes, startsWith and endsWith - determine whether another string is part of the given string
+// - slice - extract a section of the string
 let strSingle: string = "A";
 console.log(`String One char: ${strSingle}`);
 let strDouble: string = "Hello";
@@ -137,6 +207,8 @@ console.log(str.indexOf("World")); // 7
 console.log(str.replace("World", "JavaScript")); // 'Hello, JavaScript!'
 console.log(str.toUpperCase()); // 'HELLO, WORLD!'
 
+
+
 // 3. Boolean: true or false (1 byte conceptually).
 // Logical entities representing true or false.
 let isTrue: boolean = true;
@@ -145,15 +217,16 @@ console.log(`boolean: ${isTrue}`);
 // null / undefined
 // Structural primitive singletons. undefined means a variable is uninitialized; null is an intentional empty object reference pointer.
 
-// 4. Undefined: Uninitialized variable. The default value of declared but unassigned variables.
+// 4. Null: Intentional absence of any object value.
+// Null (intentional absence)
+let nullVar: null = null;
+console.log(`null: ${nullVar}`);
+
+// 5. Undefined: Uninitialized variable. The default value of declared but unassigned variables.
 // Undefined (uninitialized)
 let uninitVar: undefined = undefined;
 console.log(`undefined: ${uninitVar}`);
 
-// 5. Null: Intentional absence of any object value.
-// Null (intentional absence)
-let nullVar: null = null;
-console.log(`null: ${nullVar}`);
 
 // 6. Symbol: Unique, immutable identifier (often used for hidden object properties).
 // Symbol (unique identifier)
@@ -296,7 +369,7 @@ enum Mixed {
   Yes = "YES",
 }
 // ==========================================
-// JS Runtime (Structural) Types
+// Runtime (Structural) Types
 // ==========================================
 //1. object (Standard)
 // Key-value hash maps. Keys are strings or symbols; values are pointers to other heap entities. V8 optimizes these using Hidden Classes (Shapes).
@@ -323,15 +396,102 @@ The Stack holds the variable (the reference/pointer), which points to the memory
 interface User {
   name: string;
   age: number;
+  // add more properties
+  email?: string;
 }
+// If want to add multiple keys at once:
+// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
+// For arbitrary extra keys, use an index signature:
+// interface User {
+//   name: string;
+//   age: number;
+//   [key: string]: unknown;
+// }
+// Then:
+// userObj.email = "a@b.com";
+// userObj.city = "Delhi";
+
+// If you don't want to add the new keys to the interface: 
+// Add them with a type assertion
+// (userObj as any).email = "alice@example.com";
+// or multiple:
+// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
+// Object.assign() is particularly convenient because you don't need to modify the interface
+
+// Better Way: create a new object
+// If don't want to weaken the type with any:
+// const newUser = { ...userObj, email: "a@b.com", city: "Delhi" };
+
 // 1. Objects (Key-Value pairs)
 // TS Interface defines the shape of an objects
 const userObj: User = { name: "Alice", age: 30 };
-console.log(`Object: ${JSON.stringify(userObj)}`);
-// 'userObj' reference is constant, but `userObj.age` is mutable.
 // object operation
+// 'userObj' reference is constant, but `userObj.age` is mutable.
+console.log(`Object: ${JSON.stringify(userObj)}`);
+// - in js only the type of the key is restricted: it has to be a string
+// - but values can be primitive values can be array, object even function. 
+// - the also key entities for OOP in js 
+// Operations object:
+// Retrieving a value
+userObj["name"] = "Bob";
+userObj.name = "Don";
+// Check wheather value exists
+userObj.hasOwnProperty('name');
+// Looping over Object:
+// when wants keys only 
+/**
+ * this code below is valid in js but not in ts, why?
+ * Object.keys() returns key as type string. But userObj is typed as User, which only allows keys "name" or "age". TypeScript doesn't know a plain string is one of those specific keys, so userObj[key] errors with something like:
+ * Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'User'
+ */
+for (const key of Object.keys(userObj)) {
+  // console.log(key, userObj[key]); // ❌ error
+} 
+// fix tell TypeScript key is actually a key of User:
+// what fixed - The second loop (Object.entries) has the same underlying issue, but TS is more lenient there since value just becomes any, so it usually won't error
+for (const key of Object.keys(userObj) as (keyof User)[]) {
+  console.log(key, userObj[key]);
+}
+// When need both key and value
+for (const [key, value] of Object.entries(userObj)) {
+  console.log(key, value);
+}
+// Even cleaner
+// You can create a small helper:
+function typedKeys<T extends object>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+for (const key of typedKeys(userObj)) {
+  console.log(key, userObj[key]);
+}
+// Object Destructuring:
+// object destructuring syntax is a concise way to extract properties from an object and assign them to distinct variables.
+const weather = {
+  sun: '☀️',
+  sun_behind_small_cloud: '🌤️',
+  sun_behind_cloud: '⛅',
+  sun_behind_large_cloud: '🌥️',
+  sun_behind_rain_cloud: '🌦️',
+  cloud: '☁️',
+  cloud_with_rain: '🌧️',
+  cloud_with_snow: '🌨️',
+  cloud_with_lightning: '🌩️',
+  cloud_with_lightning_and_rain: '⛈️',
+};
+const { sun, cloud, cloud_with_lightning } = weather;
+sun;
+// => '☀️'
+cloud;
+// => '☁️'
+cloud_with_lightning;
+// => '🌩️'
 
 // 2. Arrays
+// Standard Array ([] / Array): A dynamically resizing sequence.
+// Under the hood, JS engines (like V8) optimize arrays
+// if elements are dense and sequential, they use a contiguous memory array
+// if elements are sparse, they automatically downgrade the layout to a slow,
+// dictionary-style hash table
 const arr = [1, 2, 3, 4, 5];
 let arrNum: number[] = [10, 20, 30];
 let arrStr: Array<string> = ["A", "B", "C"];
@@ -343,12 +503,57 @@ let arr1 = [1, 2, 3, 4, 5];
 console.log(`Original: ${arr1}`);
 
 // Arrays
-arr1.push(6); // Add to end -> [1,2,3,4,5,6]
-arr1.pop(); // Remove last -> 6
-arr1.shift(); // Remove first -> 1
-arr1.unshift(0); // Add to beginning -> [0,2,3,4,5]
+arr1.push(6); // Add to end -> [1,2,3,4,5,6] returns the new length of the array
+arr1.pop(); // Remove last -> 6 changes the length of the array
+arr1.shift(); // Remove first -> 1 changes the length of the array
+arr1.unshift(0); // Add to beginning -> [0,2,3,4,5]  returns the new length of the array
+// changes the contents of an array by removing or replacing existing elements and/or adding new elements in place
+arr1.splice  // method returns an array containing the deleted elements
+arr1.includes(3) // whether an array includes a certain value among its entries, returning true or false as appropriat
+arr1.every((num) => num % 2 !== 0); //  whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value
+arr1.some((num) => num % 2 !== 0); //  whether at least one element in the array passes the test implemented by the provided function
+arr1.find((num) => num < 5); //  returns the value of the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned
+arr1.findIndex((num) => num > 7);  // returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test
 
-// Array iteration
+// Array Transformation: Some methods are (pure), meaning that they do not modify the original array
+// map (pure)
+// Create a new array by transforming each element according to a function passed as an argument. These callback functions are often written as arrow functions
+console.log(arr1.map((value) => value - 1))
+// filter (pure)
+// Creates an array by filtering the current one, given a filtering function (that returns true if the element should be kept and false if it should be removed)
+console.log(arr1.filter((value) => value % 2 === 0));
+// reduce(pure)
+// Reduces the array to a single value using a function that takes an accumulator and the current element of the array as parameters
+// This function instructs how the current element must be merged into the accumulator and returns the accumulator that will be used on the next iteration
+// arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+// reverse
+// Reverses the elements of an array.
+console.log(arr1.reverse())
+// slice(pure)
+// Given a start and an end index, creates a sub-array from the array it is called on.
+console.log(arr1.slice(1))
+// Splice
+// Removes or replaces and/or adds new elements of an array.
+// it takes - start index , number of element to delete , element to insert in array(optional)
+// Insert an element at index 2
+arr1.splice(2, 0, 3) // 0 values removed 
+// Sort
+// By default, sort sorts the elements of an array by first converting them to strings and then applying string comparison
+// The sorting happens in-place which means the original array is modified. 
+// sort also returns that modified array which is convenient if you want to chain other methods to it.
+arr1.sort();
+// To customize the sorting behavior, you can pass a comparison function as an argument.
+// The comparison function itself is called with two arguments which are two elements of the array. It then needs to return the following:
+// - a negative number if the first argument should be sorted before the second
+// - a positive number if the first argument should be sorted after the second
+// - 0 if the order of the elements should stay the same
+arr1.sort((a, b) => a - b);
+
+
+// Array Loops: 
+// for loops
+// for..of loop
+// forEach - Array iteration
 arr1.forEach((num) => {
   console.log(num);
 });
@@ -375,16 +580,13 @@ const evens2: number[] = numbers1.filter((x) => x % 2 === 0);
 // Type-safe find
 const found: number | undefined = numbers1.find((x) => x > 2);
 
-// ==========================================
-// Keyed Collections:-
-// ==========================================
-// Array
-// ==========================================
-// Standard Array ([] / Array): A dynamically resizing sequence.
-// Under the hood, JS engines (like V8) optimize arrays
-// if elements are dense and sequential, they use a contiguous memory array
-// if elements are sparse, they automatically downgrade the layout to a slow,
-// dictionary-style hash table
+// Array Destructuring
+// Array destructuring syntax is a concise way to extract values from an array and assign them to distinct variables
+// each value in the numberOfMoons array is assigned to its corresponding planet:
+const numberOfMoons = [0, 2, 14];
+const [venus, mars, neptune] = numberOfMoons;
+neptune;
+// => 14
 
 // An array is a list that holds multiple items in order
 const fruits = ["apple", "banana", "orange"];
@@ -450,6 +652,11 @@ console.log(view[0]); // 42
 // Float64Array -> 64-bit decimals -> More precision
 // BigInt64Array -> 64-bit big integers -> Huge integers
 // BigUint64Array -> Unsigned big integers -> Huge positive integers
+
+// ==========================================
+// Keyed Collections:-
+// ==========================================
+// A keyed collection stores data as key–value pairs, where each value is accessed using its unique key
 
 // ==========================================
 // Map
@@ -580,6 +787,12 @@ type IsString<T> = T extends string ? true : false;
 // ==========================================
 let strNum: string = "42.5px";
 
+//  some built-in helpers
+// Boolean, Number, String
+// Number(value)
+// - if try to convert a non-primitive value or a string that does not represent a number, the result is NaN
+// Boolean(value)
+// know this - false, 0, empty string, null, undefined and NaN are Falsy
 // String to Number (Explicit)
 let parsedInt: number = parseInt(strNum, 10); // 42 (stops at non-numeric characters. '10' is the radix/base)
 let parsedFloat: number = parseFloat(strNum); // 42.5
@@ -597,34 +810,57 @@ let unknownData: unknown = "Hello TS";
 let lengthOfData: number = (unknownData as string).length;
 let lengthAlt: number = (<string>unknownData).length; // Alternate syntax (clashes with React JSX)
 
+// Type Coercion
+// - JavaScript will automatically convert a value to another data type before it evaluates some statement. 
+// - This implicit conversion is called type coercion.
+// In Boolean Context
+// - When a non-boolean value is used in a boolean context
+// In String Context
+// - Addition operator + is used for primitive values and one operand is a string, the other one will be coerced into a string as well
+// Numeric Context
+// - Many operators coerce the operands into numbers if necessary - unary +, - makes a valid string number
+
+
 // ==========================================
 // Operators
 // ==========================================
-/*
-Arithmetic: +, -, *, /, % (modulo), ** (exponentiation)
-Assignment: =, +=, -=, *=, /=, %=, **=
-Unary: ++, --, +, -, ~, !
 
-Comparison (Crucial JS/TS distinction):
-- Loose Equality (==, !=): Performs implicit type coercion. (e.g., 5 == "5" is true). AVOID.
-- Strict Equality (===, !==): Compares VALUE and TYPE. (e.g., 5 === "5" is false). ALWAYS USE.
-*/
+// Arithmetic Operator: +, -, *, /, % (modulo), ** (exponentiation)
+// Order of Operations:
+// - When using multiple operations in a line. JavaScript follows an order of precedence
+// - JavaScript uses the PEDMAS (Parentheses, Exponents, Division/Multiplication, Addition/Subtraction)
+
+// Assignment Operator: =, +=, -=, *=, /=, %=, **=
+// this simply means e.g (a+=1) -> a = a + 1
+
+// Unary Operator: ++, --, +, -, ~, ! 
+// - unary includes Increment/Decrement they modify a variable in place. ++ adds one to a number, -- subtracts one from a number
+
+// Comparison Operator (Crucial JS/TS distinction):
+// - Loose Equality (==, !=): Performs implicit type coercion. (e.g., 5 == "5" is true). AVOID
+// - Strict Equality (===, !==): Compares VALUE and TYPE. (e.g., 5 === "5" is false). ALWAYS USE
 // Comparison (use === and !==, not == and !=)
-
-const a: number = 10,
-  b: number = 5;
+const a: number = 10, b: number = 5;
 console.log(`\nComparison: ${a} > ${b} is ${a > b}`);
 console.log(`Comparison: ${a} == ${b} is ${a == b}`);
 console.log(`Strict: ${a} === ${b} is ${a === b}`);
+// - Relational Operator: >, <, >=, <=
 
-// - Relational: >, <, >=, <=
-
-// Logical:
+// Logical Operator:
 // - && (AND), || (OR), ! (NOT)
 console.log(`\nLogical: true && false = ${true && false}`);
 console.log(`Logical: true || false = ${true || false}`);
 console.log(`Logical: !true = ${!true}`);
 
+// Rest & Spread Operators
+// (...) operator that makes it easier to work with indefinite numbers of elements. 
+// Depending on the context, it's called either a rest operator or spread operator.
+// When Appear at left side of assignment- called Rest operator  It collects zero or more values, and stores them into a single array. It must be the last element in a destructuring assignment
+const [one, two, ...everythingElse]: number[] = [0, 1, 1, 2, 3, 5, 8];
+// When Appear at Right side of assignment - called spread operator It expands an array into a list of elements and can appear more than once 
+const oneToFive: number[] = [1, 2, 3, 4, 5];
+const oneToTen: number[] = [...oneToFive, 6, 7, 8, 9, 10]; // => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const woow: (string | number)[] = ['A', ...oneToFive, 'B', 'C', 'D', 'E', ...oneToFive, 42];
 // ==========================================
 // Conditionals (if else family)
 // ==========================================
@@ -674,6 +910,7 @@ let status1: string = ternaryAge >= 18 ? "Adult" : "Minor";
 console.log(`Ternary status: ${status1}\n`);
 
 // - ?? (Nullish Coalescing): Returns right-hand side ONLY if left is `null` or `undefined`.
+// used in  situations where you want to apply a default value in case a variable is null or undefined (but only then)
 let nullValue: string | null = null;
 let result = nullValue ?? "Default";
 console.log(`Nullish coalescing: null ?? "Default" = ${result}`);
@@ -682,7 +919,9 @@ interface User {
   name: string;
   age: number;
 }
-// - ?. (Optional Chaining): Safely accesses deeply nested properties.
+// - ?. (Optional Chaining): 
+// Safely accesses deeply nested properties
+// With the optional chaining operator ?. you can ensure that JavaScript only tries to access the nested key if the parent was not null or undefined.
 let optChain1 = userObj?.name;
 console.log(`Optional chaining: userObj?.name = ${optChain1}\n`);
 
@@ -694,8 +933,18 @@ let optChain = userObj?.name; // Evaluates to "Alice" without throwing if userOb
 // ==========================================
 // Loops
 // ==========================================
-let counter: number = 0;
 
+// for loop
+/*
+for (initialization; condition; step) {
+  // code that is executed repeatedly as long as the condition is true
+}
+*/
+const list: string[]= ['a', 'b', 'c'];
+for (let i = 0; i < list.length; i++) {
+  // code that should be executed for each item list[i]
+}
+let counter: number = 0;
 // While loop
 while (counter < 3) {
   counter++;
@@ -805,7 +1054,16 @@ function addTyped2(a: number, b: number): number {
 // ==========================================
 // Function Parameters & Arguments
 // ==========================================
+// Parameters:
+// - placeholder for the value that functions accepts
+// function someName(param1, param2, param3) {
+  // ...
+// }
+// Arguments:
+// - actual value passed to that parameter
+// someName(arg1, arg2, arg3);
 
+// Arguments:
 // Optional parameters
 function greet(name: string, greeting?: string): string {
   return `${greeting || "Hello"}, ${name}!`;
@@ -944,6 +1202,26 @@ display({ name: "Alice", age: 25 });
 // Typed arrow function
 const multiplyTyped2 = (a: number, b: number): number => a * b;
 
+
+
+// ==========================================
+// Callbacks Functions
+// ==========================================
+//  functions passed as arguments
+// This programming pattern creates a sequence of function calls in both synchronous and asynchronous programming
+// writing it is not different from normal function however, 
+// the callback function must match the signature defined by the calling function
+const sideLength = 5;
+// function applySideLength(callback: Function) { ... } // avoid this it's lazy way ts stops checking
+// recommended to write the real shape of the function  
+function applySideLength(callback: (side: number) => number) {
+  return callback(sideLength);
+}
+function areaOfSquare(side: number) {
+  return side * side;
+}
+applySideLength(areaOfSquare); // => 25
+
 // ==========================================
 // Recursive Functions
 // ==========================================
@@ -953,6 +1231,7 @@ function factorial(n: number): number {
   if (n <= 1) return 1;
   return n * factorial(n - 1);
 }
+
 
 // ==========================================
 // Import Export
@@ -1311,8 +1590,9 @@ function executeSafely(fn: () => void): void {
 executeSafely(() => {
   throw new TypeError("Example forced error");
 });
+
 // ==========================================
-// Regsx
+// Regex
 // ==========================================
 // Regular Expressions (Regex)
 // Regex = a pattern to match text against rules.
