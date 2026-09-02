@@ -1,0 +1,358 @@
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root {
+  --bg-1: #1a120c;
+  --bg-2: #0b0b0d;
+  --bg-3: #08080a;
+
+  --orange: #ff7800;
+  --orange-dim: #c2410c;
+  --red: #c41e2a;
+
+  --ink: #eee;
+  --muted: #9a958f;
+  --faint: #5c5850;
+
+  --line: rgba(255, 120, 0, 0.35);
+  --panel: rgba(16, 12, 9, 0.6);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  /* single source of truth for the background — sections stay
+     transparent so nothing ever seams against this as you scroll */
+  background: radial-gradient(circle at 50% 30%, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  cursor: none; /* the #cursor div is the visible pointer */
+}
+
+::selection {
+  background: var(--red);
+  color: #fff;
+}
+
+/* Restore the normal pointer + hide the custom rig on touch devices,
+   where there's no mouse to track */
+@media (hover: none) {
+  body {
+    cursor: auto;
+  }
+  #cursor,
+  #follower {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Ambient backdrop — giant fixed Sharingan + spinning tomoe
+   watermark. Both are position:fixed and z-indexed behind
+   everything, so they never move or reset between sections —
+   that's what keeps scrolling seamless.
+   ============================================================ */
+#eye {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.watermark {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.05;
+}
+
+.watermark svg {
+  width: 70vmin;
+  height: 70vmin;
+  animation: spin 90s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watermark svg {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Custom cursor + trailing follower
+   ============================================================ */
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  transform: translate(-4px, -3px);
+  z-index: 999;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+  will-change: transform;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+#cursor svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Was: background:url("./cursor-svg.svg") + hidden inner svg — that
+   depended on a separate asset. This reuses the kunai you already have
+   and just makes it react (scale/glow/tilt) on interactive hover, so
+   there's nothing extra to ship. Your TS only needs to keep toggling
+   this class name, nothing else changes. */
+#cursor.button-cursor {
+  transform: translate(-4px, -3px) scale(1.35) rotate(-8deg);
+  filter: drop-shadow(0 0 10px rgba(255, 120, 0, 0.65)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+}
+
+#follower {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(196, 30, 42, 0.16);
+  border: 1px solid rgba(255, 120, 0, 0.35);
+  backdrop-filter: blur(3px);
+  pointer-events: none;
+  z-index: 998;
+  /* NOTE: no left/top transition here on purpose — if your TS sets
+     left/top on every mousemove, you want that instant, not eased. */
+  transition: width 0.6s ease, height 0.6s ease, border-radius 0.6s ease, background-color 0.6s ease;
+}
+
+/* ONLY during a button/form lock-on does it ease into position */
+#follower.btn-hover {
+  transition: left 0.6s ease, top 0.6s ease, width 0.6s ease, height 0.6s ease, border-radius 0.6s ease;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+#follower.form-hover {
+  border-radius: 0;
+  background: rgba(255, 120, 0, 0.08);
+}
+
+/* ============================================================
+   HUD — clientX/clientY readout
+   Was a full-width bar with default <p> styling pushing the page
+   down. Now a small fixed corner readout, like a targeting HUD.
+   ============================================================ */
+.info-bar {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 50;
+  display: flex;
+  gap: 14px;
+  padding: 8px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(4px);
+}
+
+.info-bar .cursor-info {
+  display: flex;
+  gap: 14px;
+}
+
+.info-bar p {
+  margin: 0;
+  display: flex;
+  gap: 4px;
+  font-family: "Consolas", "SFMono-Regular", monospace;
+  font-size: 12px;
+  color: var(--orange);
+}
+
+.info-bar span {
+  color: var(--ink);
+}
+
+/* ============================================================
+   Hero — eye-box now just lays out the form panel; the eye SVG
+   itself is fixed/full-bleed (see above), so this no longer
+   fights it for space.
+   ============================================================ */
+.eye-box {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--orange);
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   Form panel
+   ============================================================ */
+.form-div {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 36px 32px;
+  background: linear-gradient(160deg, rgba(20, 14, 10, 0.72), rgba(10, 8, 7, 0.55));
+  border: 1px solid var(--line);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+#form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* was: height:100vh; width:100vw; ...then width:70vw again lower down —
+     the duplicate rule made the form balloon to full-viewport height */
+}
+
+#form label {
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+}
+
+#form input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 10px 2px;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--orange-dim);
+  outline: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+  /* was: background-color: linear-gradient(...) — invalid CSS, silently
+     ignored, so the input fell back to a default light background with
+     near-white (#eee) text on top of it: basically invisible text. */
+}
+
+#form input::placeholder {
+  color: var(--faint);
+}
+
+#form input:focus {
+  border-bottom-color: var(--red);
+  background: rgba(255, 120, 0, 0.06);
+  /* was identical to the resting state, so focus was invisible */
+}
+
+.btn-div {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-div button {
+  font-size: 1rem;
+  padding: 12px 28px;
+  background: transparent;
+  color: var(--orange);
+  border: 2px solid var(--orange-dim);
+  letter-spacing: 0.5px;
+  cursor: none;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-div button:hover {
+  background: var(--orange);
+  color: #151109;
+  border-color: var(--orange);
+}
+
+.btn-div button:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+/* Applied via TS on hover/focus of the form area */
+.form-hover {
+  background: linear-gradient(160deg, rgba(28, 18, 12, 0.8), rgba(10, 8, 7, 0.65));
+  transition: all 0.25s ease;
+  /* was: background-color: linear-gradient(...) — same invalid-property
+     bug as the inputs, so this state never visibly applied before */
+}
+
+.form-hover label,
+.form-hover input {
+  background: transparent;
+}
+
+/* ============================================================
+   Future pages — empty for now. Kept fully transparent so the
+   fixed backdrop above shows through with no visible seam as
+   you scroll from section to section.
+   ============================================================ */
+.page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 60px 20px;
+}
+
+.page .placeholder {
+  color: var(--faint);
+  font-family: "Consolas", monospace;
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  text-align: center;
+}

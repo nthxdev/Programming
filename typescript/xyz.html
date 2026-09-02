@@ -1,14 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Typescript xyz</title>
 </head>
+
 <body>
-    <main>
-        
-    </main>
-    <script type="module" src=""></script>
+    <div class="info-bar">
+        <div class="cursor-info">
+            <p>clientX: <span id="clientX">0</span></p>
+            <p>clientY: <span id="clientY">0</span></p>
+        </div>
+    </div>
+
+    <div class="watermark">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="11.6" fill="none" stroke="#c41e2a" stroke-width="0.3" />
+            <g fill="#c41e2a">
+                <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                    transform="rotate(0 12 12)" />
+                <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                    transform="rotate(120 12 12)" />
+                <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                    transform="rotate(240 12 12)" />
+            </g>
+        </svg>
+    </div>
+
+    <div id="cursor">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="bladeGrad" x1="18" y1="3" x2="30" y2="23" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#F5F5F6" />
+                    <stop offset="0.55" stop-color="#C7C9CC" />
+                    <stop offset="1" stop-color="#84878C" />
+                </linearGradient>
+            </defs>
+            <path
+                d="M23 43 C29 44 34.5 46.5 33.8 51.2 C33.3 54.8 27.4 55.2 25.7 51.7 C28.7 51 30.4 48.4 27.8 46.3 C26.2 45 24.3 44.3 23 43 Z"
+                fill="#FF7800" />
+            <ellipse cx="29.6" cy="52.2" rx="3" ry="2.5" fill="#FFF3E1" />
+            <circle cx="24" cy="41.2" r="4.4" fill="none" stroke="#181818" stroke-width="2.6" />
+            <rect x="20.2" y="27" width="7.6" height="12.6" rx="1.6" fill="#FF7800" />
+            <rect x="20.2" y="30.2" width="7.6" height="1.6" fill="#181818" />
+            <rect x="20.2" y="34.6" width="7.6" height="1.6" fill="#181818" />
+            <polygon points="16,23.2 32,23.2 29.4,26.2 18.6,26.2" fill="#181818" />
+            <polygon points="24,3 29.2,19 25.4,23 22.6,23 18.8,19" fill="url(#bladeGrad)" stroke="#5b5e63"
+                stroke-width="0.6" stroke-linejoin="round" />
+            <line x1="24" y1="6" x2="24" y2="19" stroke="#9a9da1" stroke-width="0.8" />
+        </svg>
+    </div>
+
+    <div id="follower"></div>
+
+    <div class="eye-box">
+        <svg id="eye" viewBox="0 0 2048 2048" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="sharinganPattern" patternUnits="objectBoundingBox" x="0" y="0" width="1" height="1"
+                    viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="12" fill="#8f0f18" />
+                    <circle cx="12" cy="12" r="11.2" fill="#c41e2a" stroke="#050505" stroke-width="1" />
+                    <g fill="#050505">
+                        <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                            transform="rotate(0 12 12)" />
+                        <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                            transform="rotate(120 12 12)" />
+                        <path d="M12,9.9 C16.08,9.56 15.4,5.48 12,3.1 C8.6,5.48 7.92,9.56 12,9.9 Z"
+                            transform="rotate(240 12 12)" />
+                    </g>
+                    <circle cx="12" cy="12" r="1.8" fill="#050505" />
+                </pattern>
+            </defs>
+            <path d="
+      M 483 1023
+      C 635 837, 824 702, 1024 702
+      C 1224 702, 1413 837, 1564 1023
+      C 1413 1209, 1224 1346, 1024 1346
+      C 824 1346, 635 1209, 483 1023
+      M 582 1023
+      C 710 881, 855 760, 1024 760
+      C 1193 760, 1351 878, 1540 1023
+      C 1351 1168, 1193 1286, 1024 1286
+      C 855 1286, 710 1168, 582 1023
+      Z
+    " fill="#000" fill-rule="evenodd" />
+            <path d="
+      M 743 1022
+      C 832 918, 946 833, 1076 833
+      C 1205 833, 1315 918, 1382 1026
+      C 1315 1138, 1205 1214, 1076 1214
+      C 946 1214, 832 1138, 743 1022
+      M 800 1023
+      C 878 930, 969 867, 1076 867
+      C 1183 867, 1275 930, 1367 1026
+      C 1275 1119, 1183 1180, 1076 1180
+      C 969 1180, 878 1119, 800 1023
+      Z
+    " fill="#000" fill-rule="evenodd" />
+            <circle id="pupil" cx="1086" cy="1026" r="119" fill="url(#sharinganPattern)" />
+        </svg>
+    </div>
+
+    <section class="page" id="page-2">
+        <div class="form-div">
+            <div class="wrap">
+                <h1>Akatsuki Registration</h1>
+                <p>Enter Your Name and skill set with resume.</p>
+            </div>
+            <form id="form">
+                <label for="username">Username</label>
+                <input id="username" type="text" placeholder="name" name="username" autocomplete="username">
+                <div class="btn-div">
+                    <button id="btn-form" type="button">Event button</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <section class="page" id="page-3">
+        <p class="placeholder">// section 3 — coming soon</p>
+    </section>
+    <section class="page" id="page-4">
+        <p class="placeholder">// section 4 — coming soon</p>
+    </section>
+    <script type="module" src="./xyz.js"></script>
+
 </body>
+
 </html>
