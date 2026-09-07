@@ -1,21 +1,46 @@
 /* ============================================================
    Tokens
+   Everything reusable — colors, glass gradients, tint scale,
+   metrics — lives here. Add new pages by reusing these tokens,
+   not new literals.
    ============================================================ */
 :root {
+  /* surfaces */
   --bg-1: #1a120c;
   --bg-2: #0b0b0d;
   --bg-3: #08080a;
 
+  /* brand */
   --orange: #ff7800;
   --orange-dim: #c2410c;
   --red: #c41e2a;
 
+  /* text */
   --ink: #eee;
   --muted: #9a958f;
   --faint: #5c5850;
 
+  /* borders / flat panels */
   --line: rgba(255, 120, 0, 0.35);
   --panel: rgba(16, 12, 9, 0.6);
+
+  /* tint scale — reused by inputs, hover states, result/error boxes */
+  --tint-soft: rgba(255, 120, 0, 0.05);
+  --tint: rgba(255, 120, 0, 0.06);
+  --tint-strong: rgba(255, 120, 0, 0.08);
+  --ring: rgba(255, 120, 0, 0.15);
+  --ring-error: rgba(196, 30, 42, 0.15);
+  --glow: rgba(255, 120, 0, 0.65);
+
+  /* "glass card" gradient, used by any elevated surface */
+  --glass: linear-gradient(160deg, rgba(20, 14, 10, 0.72), rgba(10, 8, 7, 0.55));
+  --glass-strong: linear-gradient(160deg, rgba(28, 18, 12, 0.8), rgba(10, 8, 7, 0.65));
+
+  /* shared metrics */
+  --radius: 4px;
+  --ease: 0.25s ease;
+  --ease-slow: 0.6s ease;
+  --shadow-panel: 0 30px 60px rgba(0, 0, 0, 0.45);
 }
 
 /* ============================================================
@@ -37,12 +62,20 @@ body {
   background: radial-gradient(circle at 50% 30%, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
   color: var(--ink);
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-  cursor: none; /* the #cursor div is the visible pointer */
+  cursor: none;
+  /* the #cursor div is the visible pointer */
 }
 
 ::selection {
   background: var(--red);
   color: #fff;
+}
+
+/* One reset instead of re-zeroing margins in every component below */
+h1,
+p,
+span {
+  margin: 0;
 }
 
 /* Restore the normal pointer + hide the custom rig on touch devices,
@@ -51,6 +84,7 @@ body {
   body {
     cursor: auto;
   }
+
   #cursor,
   #follower {
     display: none;
@@ -63,15 +97,6 @@ body {
    everything, so they never move or reset between sections —
    that's what keeps scrolling seamless.
    ============================================================ */
-#eye {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  opacity: 0.45;
-  pointer-events: none;
-}
 
 .watermark {
   position: fixed;
@@ -116,7 +141,7 @@ body {
   z-index: 999;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
   will-change: transform;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: transform var(--ease), filter var(--ease);
 }
 
 #cursor svg {
@@ -125,14 +150,14 @@ body {
   display: block;
 }
 
-/* Was: background:url("./cursor-svg.svg") + hidden inner svg — that
-   depended on a separate asset. This reuses the kunai you already have
-   and just makes it react (scale/glow/tilt) on interactive hover, so
-   there's nothing extra to ship. Your TS only needs to keep toggling
-   this class name, nothing else changes. */
-#cursor.button-cursor {
+#cursor.btn-cursor {
   transform: translate(-4px, -3px) scale(1.35) rotate(-8deg);
-  filter: drop-shadow(0 0 10px rgba(255, 120, 0, 0.65)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 0 10px var(--glow)) drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+  background: url("./cursor-svg.svg") center / contain no-repeat;
+}
+
+#cursor.btn-cursor svg {
+  display: none;
 }
 
 #follower {
@@ -141,30 +166,28 @@ body {
   height: 40px;
   border-radius: 50%;
   background: rgba(196, 30, 42, 0.16);
-  border: 1px solid rgba(255, 120, 0, 0.35);
+  border: 1px solid var(--line);
   backdrop-filter: blur(3px);
   pointer-events: none;
   z-index: 998;
-  /* NOTE: no left/top transition here on purpose — if your TS sets
-     left/top on every mousemove, you want that instant, not eased. */
-  transition: width 0.6s ease, height 0.6s ease, border-radius 0.6s ease, background-color 0.6s ease;
+  /* no left/top transition on purpose — TS sets those on every
+     mousemove and that should be instant, not eased */
+  transition: width var(--ease-slow), height var(--ease-slow), border-radius var(--ease-slow), background-color var(--ease-slow);
 }
 
 /* ONLY during a button/form lock-on does it ease into position */
 #follower.btn-hover {
-  transition: left 0.6s ease, top 0.6s ease, width 0.6s ease, height 0.6s ease, border-radius 0.6s ease;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  transition: left var(--ease-slow), top var(--ease-slow), width var(--ease-slow), height var(--ease-slow), border-radius var(--ease-slow);
+  box-shadow: var(--shadow-panel);
 }
 
 #follower.form-hover {
   border-radius: 0;
-  background: rgba(255, 120, 0, 0.08);
+  background: var(--tint-strong);
 }
 
 /* ============================================================
    HUD — clientX/clientY readout
-   Was a full-width bar with default <p> styling pushing the page
-   down. Now a small fixed corner readout, like a targeting HUD.
    ============================================================ */
 .info-bar {
   position: fixed;
@@ -185,7 +208,6 @@ body {
 }
 
 .info-bar p {
-  margin: 0;
   display: flex;
   gap: 4px;
   font-family: "Consolas", "SFMono-Regular", monospace;
@@ -198,9 +220,7 @@ body {
 }
 
 /* ============================================================
-   Hero — eye-box now just lays out the form panel; the eye SVG
-   itself is fixed/full-bleed (see above), so this no longer
-   fights it for space.
+   Hero eye
    ============================================================ */
 .eye-box {
   position: relative;
@@ -212,6 +232,16 @@ body {
   padding: 40px 20px;
 }
 
+#eye {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .wrap {
   display: flex;
   flex-direction: column;
@@ -221,15 +251,13 @@ body {
 }
 
 h1 {
-  margin: 0;
   font-size: clamp(20px, 2.4vw, 26px);
   font-weight: 600;
   letter-spacing: 0.3px;
   color: var(--orange);
 }
 
-p {
-  margin: 0;
+.wrap p {
   color: var(--muted);
   font-size: 13px;
   max-width: 420px;
@@ -237,7 +265,10 @@ p {
 }
 
 /* ============================================================
-   Form panel
+   Form card component
+   Any section that wraps its content in `.form-div` gets the
+   same glass panel + inputs + button styling — this is the one
+   place to touch when a new page needs a form.
    ============================================================ */
 .form-div {
   width: 100%;
@@ -247,58 +278,100 @@ p {
   align-items: center;
   gap: 28px;
   padding: 36px 32px;
-  background: linear-gradient(160deg, rgba(20, 14, 10, 0.72), rgba(10, 8, 7, 0.55));
+  background: var(--glass);
   border: 1px solid var(--line);
   backdrop-filter: blur(6px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow-panel);
 }
 
-#form {
+/* Layout for any <form> dropped inside a card — no per-form id
+   rules needed for this. */
+.form-div form {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  /* was: height:100vh; width:100vw; ...then width:70vw again lower down —
-     the duplicate rule made the form balloon to full-viewport height */
 }
 
-#form label {
+.form-div label {
   font-size: 0.85rem;
   letter-spacing: 0.4px;
+  font-weight: 500;
   color: var(--muted);
 }
 
-#form input {
+/* One input style, used by every form on the site. This also fixes
+   the page-2 "thick dark border": that was native browser chrome
+   (password/autofill styling) bleeding through because appearance
+   was never reset — appearance:none + the autofill override below
+   stops the browser from drawing its own border/background. */
+.form-div input {
   width: 100%;
   font-size: 1rem;
-  padding: 10px 2px;
+  padding: 10px 12px;
   color: var(--ink);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--orange-dim);
+  background: var(--tint-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   outline: none;
-  transition: border-color 0.25s ease, background-color 0.25s ease;
-  /* was: background-color: linear-gradient(...) — invalid CSS, silently
-     ignored, so the input fell back to a default light background with
-     near-white (#eee) text on top of it: basically invisible text. */
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color var(--ease), background-color var(--ease), box-shadow var(--ease);
 }
 
-#form input::placeholder {
+.form-div input::placeholder {
   color: var(--faint);
 }
 
-#form input:focus {
-  border-bottom-color: var(--red);
-  background: rgba(255, 120, 0, 0.06);
-  /* was identical to the resting state, so focus was invisible */
+.form-div input:focus {
+  border-color: var(--orange);
+  background: var(--glass-strong);
+  box-shadow: 0 0 0 3px var(--ring);
 }
 
+.form-div input:valid:not(:placeholder-shown) {
+  border-color: var(--orange);
+}
+
+.form-div input.error {
+  border-color: var(--red);
+}
+
+.form-div input.error:focus {
+  box-shadow: 0 0 0 3px var(--ring-error);
+}
+
+/* Stop Chrome/Edge autofill from drawing its own yellow/dark box
+   over the input regardless of the background set above. */
+.form-div input:-webkit-autofill,
+.form-div input:-webkit-autofill:hover,
+.form-div input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: 0 0 0 1000px rgba(20, 14, 10, 0.9) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Container-level hover/focus state — toggled on .form-div from TS */
+.form-hover {
+  background: var(--glass-strong);
+  transition: all var(--ease);
+}
+
+.form-hover label,
+.form-hover input {
+  background: transparent;
+}
+
+/* Buttons. `.btn-div button` keeps existing markup working as-is;
+   `.btn` lets a future button opt into the same look without
+   needing the wrapper div. */
 .btn-div {
   display: flex;
   justify-content: center;
 }
 
-.btn-div button {
+.btn-div button,
+.btn {
   font-size: 1rem;
   padding: 12px 28px;
   background: transparent;
@@ -307,37 +380,61 @@ p {
   letter-spacing: 0.5px;
   cursor: none;
   clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  transition: background-color var(--ease), color var(--ease), border-color var(--ease);
 }
 
-.btn-div button:hover {
+.btn-div button:hover,
+.btn:hover {
   background: var(--orange);
   color: #151109;
-  border-color: var(--orange);
+  border-color: var(--line);
 }
 
-.btn-div button:focus-visible {
-  outline: 2px solid var(--red);
+.btn-div button:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
 
-/* Applied via TS on hover/focus of the form area */
-.form-hover {
-  background: linear-gradient(160deg, rgba(28, 18, 12, 0.8), rgba(10, 8, 7, 0.65));
-  transition: all 0.25s ease;
-  /* was: background-color: linear-gradient(...) — same invalid-property
-     bug as the inputs, so this state never visibly applied before */
+/* Inline field error, e.g. under an input */
+.field-error {
+  display: block;
+  min-height: 18px;
+  margin-top: -8px;
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 500;
+  line-height: 1.4;
 }
 
-.form-hover label,
-.form-hover input {
+.field-error:empty {
+  display: none;
+}
+
+/* Freeform status line under a form, e.g. a submit result */
+.result {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--orange);
+  min-height: 24px;
+  padding: 8px 0;
+  border-radius: var(--radius);
+  background: var(--tint);
+  margin-top: 8px;
+}
+
+.result:empty {
   background: transparent;
 }
 
 /* ============================================================
-   Future pages — empty for now. Kept fully transparent so the
-   fixed backdrop above shows through with no visible seam as
-   you scroll from section to section.
+   Page sections
+   Every future section should just be
+   <section class="page" id="page-N">…</section> — it inherits a
+   transparent background so the fixed watermark/eye never seam
+   as you scroll from section to section. Drop a `.form-div` card
+   inside it if the section needs a form.
    ============================================================ */
 .page {
   min-height: 100vh;
@@ -355,4 +452,37 @@ p {
   font-size: 13px;
   letter-spacing: 0.4px;
   text-align: center;
+}
+
+/* ============================================================
+   Page-3 demo box — scoped to `.demo` so it can never leak onto
+   other inputs on the page (the old bare `input {}` rule did).
+   ============================================================ */
+.demo {
+  width: 400px;
+  margin: 50px auto;
+  font-family: sans-serif;
+}
+
+.demo input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  color: var(--ink);
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#mouse-box {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  color: var(--orange);
 }

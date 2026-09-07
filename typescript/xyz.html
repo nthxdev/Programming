@@ -73,34 +73,48 @@
                     </g>
                     <circle cx="12" cy="12" r="1.8" fill="#050505" />
                 </pattern>
+                <!-- CLIPPING SHAPE -->
+                <clipPath id="innerEyeClip">
+                    <path d="
+                        M 800 1023
+                        C 878 930, 969 867, 1076 867
+                        C 1183 867, 1275 930, 1367 1026
+                        C 1275 1119, 1183 1180, 1076 1180
+                        C 969 1180, 878 1119, 800 1023
+                        Z
+                    " />
+                </clipPath>
             </defs>
+
             <path d="
-      M 483 1023
-      C 635 837, 824 702, 1024 702
-      C 1224 702, 1413 837, 1564 1023
-      C 1413 1209, 1224 1346, 1024 1346
-      C 824 1346, 635 1209, 483 1023
-      M 582 1023
-      C 710 881, 855 760, 1024 760
-      C 1193 760, 1351 878, 1540 1023
-      C 1351 1168, 1193 1286, 1024 1286
-      C 855 1286, 710 1168, 582 1023
-      Z
-    " fill="#000" fill-rule="evenodd" />
-            <path d="
-      M 743 1022
-      C 832 918, 946 833, 1076 833
-      C 1205 833, 1315 918, 1382 1026
-      C 1315 1138, 1205 1214, 1076 1214
-      C 946 1214, 832 1138, 743 1022
-      M 800 1023
-      C 878 930, 969 867, 1076 867
-      C 1183 867, 1275 930, 1367 1026
-      C 1275 1119, 1183 1180, 1076 1180
-      C 969 1180, 878 1119, 800 1023
-      Z
-    " fill="#000" fill-rule="evenodd" />
-            <circle id="pupil" cx="1086" cy="1026" r="119" fill="url(#sharinganPattern)" />
+                M 483 1023
+                C 635 837, 824 702, 1024 702
+                C 1224 702, 1413 837, 1564 1023
+                C 1413 1209, 1224 1346, 1024 1346
+                C 824 1346, 635 1209, 483 1023
+                M 582 1023
+                C 710 881, 855 760, 1024 760
+                C 1193 760, 1351 878, 1540 1023
+                C 1351 1168, 1193 1286, 1024 1286
+                C 855 1286, 710 1168, 582 1023
+                Z
+                " fill="#000" fill-rule="evenodd" />
+            <path id="inner-eye" d="
+                M 743 1022
+                C 832 918, 946 833, 1076 833
+                C 1205 833, 1315 918, 1382 1026
+                C 1315 1138, 1205 1214, 1076 1214
+                C 946 1214, 832 1138, 743 1022
+                M 800 1023
+                C 878 930, 969 867, 1076 867
+                C 1183 867, 1275 930, 1367 1026
+                C 1275 1119, 1183 1180, 1076 1180
+                C 969 1180, 878 1119, 800 1023
+                Z
+                " fill="#000" fill-rule="evenodd" />
+            <!-- Pupil clipped to inner eye -->
+            <g clip-path="url(#innerEyeClip)">
+                <circle id="pupil" cx="1086" cy="1026" r="119" fill="url(#sharinganPattern)" />
         </svg>
     </div>
 
@@ -113,6 +127,9 @@
             <form id="form">
                 <label for="username">Username</label>
                 <input id="username" type="text" placeholder="name" name="username" autocomplete="username">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="password" name="password">
+
                 <div class="btn-div">
                     <button id="btn-form" type="button">Event button</button>
                 </div>
@@ -121,10 +138,62 @@
     </section>
     <section class="page" id="page-3">
         <p class="placeholder">// section 3 — coming soon</p>
+        <div class="demo">
+            <input id="search" type="text" placeholder="Type something..." />
+
+            <div id="mouse-box">
+                Move your mouse here
+            </div>
+
+            <p>Debounce: <span id="debounce-count">0</span></p>
+            <p>Throttle: <span id="throttle-count">0</span></p>
+        </div>
     </section>
-    <section class="page" id="page-4">
-        <p class="placeholder">// section 4 — coming soon</p>
-    </section>
+<section class="page" id="page-4">
+  <div class="form-div">
+    <div class="wrap">
+      <h1>Form Validation</h1>
+      <p>Fill in the fields below to see live validation.</p>
+    </div>
+    <form id="validator-form">
+      <label for="name">Name</label>
+      <input 
+        id="name" 
+        type="text" 
+        placeholder="Enter your name" 
+        name="name"
+        autocomplete="name"
+      >
+      <span class="field-error" id="nameError"></span>
+
+      <label for="email">Email</label>
+      <input 
+        id="email" 
+        type="email" 
+        placeholder="you@example.com" 
+        name="email"
+        autocomplete="email"
+      >
+      <span class="field-error" id="emailError"></span>
+
+      <label for="v-password">Password</label>
+      <input 
+        id="v-password" 
+        type="password" 
+        placeholder="Min 8 chars, upper, lower, number, special" 
+        name="password"
+        autocomplete="new-password"
+      >
+      <span class="field-error" id="passwordError"></span>
+
+      <div class="btn-div">
+        <button type="submit">Submit</button>
+      </div>
+
+      <p class="result" id="result"></p>
+    </form>
+  </div>
+</section>
     <script type="module" src="./xyz.js"></script>
 
 </body>
