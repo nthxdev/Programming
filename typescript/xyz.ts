@@ -336,7 +336,8 @@ console.log("constructor" in myDog); // true ✓ (inherited from Object)
 console.log("color" in myDog); // false (doesn't exist)
 
 // SECTION 7: Object.hasOwn() — Own Property Check (Recommended)
-// "Object.hasOwn()" — checks if a property is owned by the object (NOT inherited). Recommended over deprecated hasOwnProperty(). Does NOT check prototype chain.
+// "Object.hasOwn()" — checks if a property is owned by the object (NOT inherited). 
+// Recommended over deprecated hasOwnProperty(). Does NOT check prototype chain.
 // Same dog instance from above
 console.log(Object.hasOwn(myDog, "name")); // true (own property)
 console.log(Object.hasOwn(myDog, "breed")); // true (own property)
@@ -355,6 +356,8 @@ const user1 = {
 // Walk through all properties
 for (const key in user1) {
   if (Object.hasOwn(user1, key)) {
+    // keyof extracts the keys
+    // typeof user gives object and than keyof pulls keys. and treats key as valid key for user
     console.log(`Own property: ${key} = ${user1[key as keyof typeof user1]}`);
   }
   // With just `in`, you'd also get inherited properties
@@ -447,25 +450,6 @@ if (validateUser(potentialUser)) {
 
 
 // SECTION 11: Common Type Checking Mistakes
-// Mistake 1: typeof null is "object" — historical quirk
-const nullValue1: unknown = null;
-if (typeof nullValue1 === "object") {
-  // This is true! But null is not an object
-  console.log("This runs even though nullValue is null");
-}
-// Solution: explicitly check for null
-if (typeof nullValue1 === "object" && nullValue1 !== null) {
-  console.log("Now it's truly an object");
-}
-// Mistake 2: Using typeof to check arrays
-const maybeArray: unknown = [1, 2, 3];
-if (typeof maybeArray === "object") {
-  // true, but doesn't prove it's an array
-}
-// Solution: use Array.isArray()
-if (Array.isArray(maybeArray)) {
-  console.log("Definitely an array:", maybeArray.map((x) => x * 2));
-}
 // Mistake 3: Trusting `in` for private properties
 const obj4 = { public: "visible" };
 console.log("public" in obj4); // true
@@ -480,15 +464,6 @@ if ("key" in dynamicObj) {
 
 // SECTION 12: Type Checking Quick Reference
 /*
-typeof value → returns: "number", "string", "boolean",
-"undefined", "object", "function",
-"bigint", "symbol"
-⚠️ typeof null === "object"
-value instanceof Class → true if Class in prototype chain
-→ only works with objects/classes
-⚠️ fails across different realms (iframes)
-Array.isArray(value) → true if array (safe, realm-independent)
-"prop" in obj → true if prop exists (includes inherited)
 → includes methods and inherited props
 Object.hasOwn(obj, "prop") → true if prop is OWN property (not inherited)
 → safer than deprecated hasOwnProperty()
@@ -609,7 +584,6 @@ console.log(`unknown: ${unknownVar}`);
 // Represents values that never occur (e.g., function that always throws)
 // never is not normally declared as a standalone variable
 // let neverVar: never;
-
 // Normally, we don't use never as a variable
 // mainly used for functions that never successfully return
 function getNever(): never {
