@@ -143,6 +143,7 @@ function processValue(value: unknown): number {
     return value;
   }
   if (typeof value === "string") {
+    // parseInt(string, radix?) - optional number/base (2–36)
     return parseInt(value);
   }
   throw new Error("Invalid type");
@@ -164,14 +165,14 @@ console.log(typeof (() => {})); // "function"
 console.log(typeof { name: "Alice" }); // "object"
 console.log(typeof [1, 2, 3]); // "object" ⚠️ arrays are objects!
 console.log(typeof null); // "object" ⚠️ historical quirk!
+// Historically, JavaScript’s first implementation classified null with the object type internally. 
+// Fixing it would break old JavaScript code, so it stayed.
 
 console.log(typeof 9007199254740991n); // "bigint"
 console.log(typeof Symbol("id")); // "symbol"
 // For [historical reason// Use typeof to validate input before processings][typeof null is "object"]
 
 // typeof for Type Guards in Functions
-// Use typeof to validate input before processing
-
 // Use typeof to validate input before processing
 function  valuePorcess(value: unknown): void {
   if (typeof value === "number") {
@@ -182,13 +183,14 @@ function  valuePorcess(value: unknown): void {
     console.log("Processing boolean:", !value);
   } else if (typeof value === "object" && value !== null) {
     console.log("Processing object:", Object.keys(value));
+// Returns: an array of strings containing the object's own enumerable property names
   } else {
     console.log("Unknown type");
   }
 }
- valuePorcess(42); // "Processing number: 84"
- valuePorcess("hello"); // "Processing string: HELLO"
- valuePorcess({ name: "Alice" }); // "Processing object: ['name']"
+valuePorcess(42); // "Processing number: 84"
+valuePorcess("hello"); // "Processing string: HELLO"
+valuePorcess({ name: "Alice" }); // "Processing object: ['name']"
 
 
 // instanceof Operator — Class & Inheritance Checking
@@ -196,6 +198,7 @@ function  valuePorcess(value: unknown): void {
 // for checking type of an object
 // it evaluates into a boolean depending on whether the second operand is included in the first operands `prototype chain`.
 // To clarify, instanceof will return whether the first operand is an instance of second operand or one of its child classes. instanceof only works on objects.
+// In simpler words: it check Was this object created from this class, or from a class that inherits from it?
 class Beverage {
   // ...
   temperature: string = "hot";
@@ -254,12 +257,15 @@ function serveBeverage(beverage: unknown): void {
 
 serveBeverage(myPourover); // Serving coffee at hot
 serveBeverage(myGreenTea); // Serving tea (green)
+// passes an object without variable
 serveBeverage(new Beverage()); // Serving generic beverage
 
 // Advanced:
 // Array class has a method called Array.isArray() that checks if its argument is an array.
-// Array.isArray() — Safe Array Checking
-// "Array.isArray()" — safer than typeof or instanceof for arrays. Works correctly across different realms (e.g., iframes). Avoids false positives where an object just has Array in prototype.
+
+// "Array.isArray()" — Safe Array Checking safer than typeof or instanceof for arrays. 
+// Works correctly across different realms (e.g., iframes). 
+// Avoids false positives where an object just has Array in prototype.
 
 const isArray = [1, 2, 3];
 const obj = { 0: "a", 1: "b", length: 2 }; // array-like but not array
@@ -286,7 +292,9 @@ if (Array.isArray(potentialArray)) {
 }
 
 // The `in` Operator — Property Existence
-// "in operator" — checks whether a property exists on an object. Returns boolean. INCLUDES inherited properties and methods from the prototype chain.
+// "in operator" — checks whether a property exists on an object. 
+// Returns boolean. 
+// INCLUDES inherited properties and methods from the prototype chain.
 
 class Animals {
   name: string = "Unknown";
