@@ -79,6 +79,7 @@ out/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+xyz.js
 
 # =========================
 # Bash / scripts
