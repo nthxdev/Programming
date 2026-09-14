@@ -1155,7 +1155,6 @@ function serveBeverage(beverage: unknown): void {
     console.log("Not a beverage!");
   }
 }
-
 serveBeverage(myPourover); // Serving coffee at hot
 serveBeverage(myGreenTea); // Serving tea (green)
 // passes an object without variable
@@ -1186,42 +1185,33 @@ console.log(Array.isArray(notArray)); // false ✓
 // In iframes or different realms, instanceof can fail
 // because each realm has its own Array constructor
 const potentialArray: unknown = [1, 2, 3];
-
 if (Array.isArray(potentialArray)) {
   // Now TypeScript knows it's an array
   console.log(potentialArray.map((x) => x * 2)); // [2, 4, 6]
 }
-
 // The `in` Operator — Property Existence
 // "in operator" — checks whether a property exists on an object. 
 // Returns boolean. 
 // INCLUDES inherited properties and methods from the prototype chain.
-
 class Animals {
   name: string = "Unknown";
-
   constructor(name: string) {
     this.name = name;
   }
-
   speak() {
     console.log(`${this.name} makes a sound`);
   }
 }
-
 class Dogs extends Animals {
   breed: string = "Unknown";
-
   constructor(name: string, breed: string) {
     super(name);
     this.breed = breed;
   }
-
   bark() {
     console.log(`${this.name} barks!`);
   }
 }
-
 const myDog = new Dogs("Rex", "Labrador");
 
 // Check own properties
@@ -1349,13 +1339,13 @@ if (validateUser(potentialUser)) {
   console.log("Invalid user data");
 }
 // SECTION 11: Common Type Checking Mistakes
-// Mistake 3: Trusting `in` for private properties
+// Mistake 1: Trusting `in` for private properties
 const obj4 = { public: "visible" };
 console.log("public" in obj4); // true
 console.log("private" in obj4); // false
 // `in` checks the prototype chain, which can be unexpected
 
-// Mistake 4: Assuming all objects have a property
+// Mistake 2: Assuming all objects have a property
 const dynamicObj: Record<string, string> = { key: "value" };
 if ("key" in dynamicObj) {
   console.log(dynamicObj.key); // ✓ safe to access
@@ -1899,7 +1889,6 @@ console.log(triplenum(5)); // 15 (remembers 3)
 // Each function remembers its own multiplier
 
 // Encapsulation - Hide & Control
-// What is Encapsulation?
 // Hide internal data and only expose controlled operations.
 function createAccount() {
   let balance = 0; // Private - hidden from outside
@@ -1931,7 +1920,6 @@ console.log(account.getBalance()); // 70
 // console.log(account.balance);
 
 // Practical: Private Variables with Closure
-
 // Closure with setTimeout
 function setupTimers() {
   for (let i = 1; i <= 3; i++) {
