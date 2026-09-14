@@ -42,7 +42,6 @@
 //   Compatible with all existing JS packages. Transpiles to clean,
 //   readable JS.
 
-
 // ==========================================
 // Code Structure
 // ==========================================
@@ -81,14 +80,13 @@ export { myFunction, MyClasses };
 Multi-line
 comment 
 */
+//  Documentation comment (JSDoc)
 /**
- * Documentation comment (JSDoc)
- * Used to describe functions, variables, parameters, etc.
  * Adds two numbers.
  * @param a First number
  * @param b Second number
  * @returns The sum.
-*/
+ */
 function docAdd(a: number, b: number): number {
   return a + b;
 }
@@ -100,20 +98,18 @@ console.log(docAdd(5, 10));
 // ==========================================
 // variables are always written in camelCase; constants are written in SCREAMING_SNAKE_CASE
 /*
-- JS/TS Variable Declarations & Scope Mechanics:
+- JS/TS Variable Declarations & Scope Mechanics: 
 Variables in JavaScript can be defined using the const, let or var keyword.
 - `let`: Block-scoped. Subject to Temporal Dead Zone (TDZ). Reassignable.
-- `const`: Block-scoped. Immutable binding (the variable identifier cannot be reassigned), 
-- but the contents of objects/arrays it points to ARE mutable.
-- `var`: Function-scoped or globally scoped. Hoisted to the top of its execution context 
-- with `undefined`. Avoid using `var` in modern TS/JS to prevent scope leakage.
+- `const`: Block-scoped. Immutable binding (the variable identifier cannot be reassigned), but the contents of objects/arrays it points to ARE mutable.
+- `var`: Function-scoped or globally scoped. Hoisted to the top of its execution context with `undefined`. Avoid using `var` in modern TS/JS to prevent scope leakage.
 */
 let myLet: string = "Block scoped";
 const MY_CONST: number = 100; // Cannot do MY_CONST = 101;
 var legacyVar: boolean = false; // Hoisted, avoid.
-
 // Const :-
 // constant assignment / binding and constant value
+const constant = "constants";
 
 // ==========================================
 // Data Types
@@ -150,6 +146,911 @@ function processValue(value: unknown): number {
 }
 
 // ==========================================
+// Built-in primitives
+// ==========================================
+// Primitives are immutable, passed by value, and stored on the Stack (usually, depending on engine implementation like V8). JS/TS has 7 primitive types.
+
+// 1. Number: IEEE 754 double-precision 64-bit floating point. (No separate int/float).
+// Number (IEEE 754 64-bit float, no separate int/float)
+// All numbers are double-precision 64-bit IEEE 754 floating-point values. No raw integer type exists at the base runtime.
+let numInt: number = 42;
+console.log(`number: ${numInt}`);
+let numFloat: number = 3.14159;
+console.log(`float: ${numFloat}`);
+let numHex: number = 0xff; // Hexadecimal
+console.log(`hex: ${numHex}`);
+let numBinary: number = 0b1010; // Binary
+console.log(`Binary: ${numBinary}`);
+
+// 2. BigInt: Arbitrary precision integers (for numbers larger than Number.MAX_SAFE_INTEGER: 2^53 - 1).
+// BigInt (arbitrary precision)
+// Arbitrary-precision integers. Allocates dynamic heap space to process numbers beyond the Safe Integer Limit ($\pm(2^{53} - 1)$).
+let bigIntVal: bigint = 9007199254740991n; // 'n' suffix
+console.log(`bigint: ${bigIntVal}`);
+// Rounding
+// There is a built-in global object called Math that provides various rounding functions.
+// For example, you can round down (floor) or round up (ceil) decimal numbers to nearest whole numbers
+Math.floor(234.34); // => 234
+Math.ceil(234.34); // => 235
+
+// 3. String: UTF-16 code units.
+// String (UTF-16) -> Immutable sequences of 16-bit UTF-16 code units, allocated and deduplicated via internal V8 string interning.
+// Creating a string
+("Hello, World!");
+("Hello, World!");
+// A string can be treated as index to acess string value.
+"cat"[1];
+// use .length to acess the length of string
+"cat".length;
+// to concate use
+"I like" + " " + "cats.";
+// some string methods
+// - toUpperCase and toLowerCase - change the case of all characters
+// - trim - remove whitespace at the beginning and end
+// - includes, startsWith and endsWith - determine whether another string is part of the given string
+// - slice - extract a section of the string
+let strSingle: string = "A";
+console.log(`String One char: ${strSingle}`);
+let strDouble: string = "Hello";
+console.log(`string: ${strDouble}`);
+const str1 = "Hello, World!";
+console.log(str1.length); // 13
+console.log(str1[0]); // 'H'
+console.log(str1.substring(0, 5)); // 'Hello'
+console.log(str1.includes("World")); // true
+console.log(str1.indexOf("World")); // 7
+console.log(str1.replace("World", "JavaScript")); // 'Hello, JavaScript!'
+console.log(str1.toUpperCase()); // 'HELLO, WORLD!'
+
+// 3. Boolean: true or false (1 byte conceptually).
+// Logical entities representing true or false.
+let isTrue: boolean = true;
+console.log(`boolean: ${isTrue}`);
+
+// null / undefined
+// Structural primitive singletons. undefined means a variable is uninitialized; null is an intentional empty object reference pointer.
+
+// 4. Null: Intentional absence of any object value.
+// Null (intentional absence)
+let nullVar: null = null;
+console.log(`null: ${nullVar}`);
+
+// 5. Undefined: Uninitialized variable. The default value of declared but unassigned variables.
+// Undefined (uninitialized)
+let uninitVar: undefined = undefined;
+console.log(`undefined: ${uninitVar}`);
+
+// 6. Symbol: Unique, immutable identifier (often used for hidden object properties).
+// Symbol (unique identifier)
+// Unique, immutable tokens generated globally or via the runtime symbol registry. Primarily used as non-clashing object keys.
+let sym: symbol = Symbol("uniqueKey");
+console.log(`symbol: ${sym.toString()}\n`);
+
+// ==========================================
+// Compile-Time Types
+// ==========================================
+// TS-Specific Types (Conceptual Primitives in TS):
+
+// 1. Any - The escape hatch. Turns off type checking completely, allowing any runtime operation.
+let anyVar: any = "Can be anything"; // Bypasses type checking (Avoid).
+console.log(`any: ${anyVar}`);
+
+// 2. Unknown - The type-safe counterpart to any. Represents any value, but forces you to perform runtime type-narrowing (e.g., typeof) before usage.
+let unknownVar: unknown = 42; // Type-safe counterpart to `any`. Requires type checking before use.
+console.log(`unknown: ${unknownVar}`);
+
+// 3. never - The bottom type. Represents the empty set of values—used for functions that never return (throw errors/infinite loops) or exhaustive switch matching.
+// Represents values that never occur (e.g., function that always throws)
+// never is not normally declared as a standalone variable
+// let neverVar: never;
+// Normally, we don't use never as a variable
+// mainly used for functions that never successfully return
+function getNever(): never {
+  throw new Error("Something went wrong");
+}
+try {
+  console.log(getNever());
+} catch (error) {
+  console.log(`error: ${error}`);
+  console.log(`typeof error: ${typeof error}`); // "object"
+}
+
+// 4. void - Represents the absence of a return value from a function. Resolves to undefined at runtime.
+const log = (): void => {};
+console.log(log()); // undefined
+console.log(`void: `, typeof log()); // "undefined"
+
+// 5. Destructuring assignment ts perform type inference here
+const [destructX, destructY] = [10, 20];
+// type inferenced
+// const { name, age } = { name: "Alice", age: 25 };
+// if want to define type explicity
+// const { MyName, MyAge }: { name: string; age: number } = { name: "Alice", age: 25 };
+
+// 5. Union types
+// allow multiple type & values - can be custom type
+let id: string | number;
+id = "ABC123"; // OK
+id = 123; // OK
+
+// 6. Literal Types
+// Restricts a variable down to a specific exact string, number, or boolean value
+type direction = "left" | "right";
+let literalType: direction = "left"; // or "right"
+
+// 7. Type Alias
+//  create reusable custom types
+// gives a name to any type
+type ID = string | number;
+const aliasType1: ID = 123;
+const aliasType2: ID = "ABCD";
+console.log(typeof aliasType1);
+console.log(typeof aliasType2);
+
+// ==========================================
+// TS Compile-Time (Advanced Types)
+// ==========================================
+// Enforces Structural Subtyping (Duck Typing). If two shapes match, their types are compatible, regardless of explicit inheritance.
+
+// 8. Structural Interfaces
+// Interface for type safety
+// object | class structure / contract
+// defines structure of object like type alias mainly for object shapes
+interface User {
+  name: string;
+  age: number;
+}
+// const obj: { [key: string]: string } = {};
+// const obj: Record<string, unknown> = {};
+
+// 9. Tuples
+// Fixed-length arrays with strictly assigned types at explicit index positions (e.g., [string, number]). Compiles down to a standard JS array.
+// Tuples (TS specific): Fixed-length array with predefined types at each index.
+let myTuple: [string, number, boolean] = ["Bob", 25, true];
+console.log(`Tuple: ${JSON.stringify(myTuple)}`);
+type StringNumberTuple = [string, number];
+const tuple1: StringNumberTuple = ["hello", 42];
+const tuple2: [string, number, boolean] = ["test", 100, true];
+// Optional tuple elements
+type OptionalTuple = [string, number?];
+const optional1: OptionalTuple = ["name"];
+const optional2: OptionalTuple = ["name", 25];
+// Variadic tuples (rest elements)
+type StringNumberRest = [string, ...number[]];
+const variadic: StringNumberRest = ["id", 1, 2, 3];
+// Readonly tuples
+type ReadonlyTup = readonly [string, number];
+const readonlyTuple: ReadonlyTup = ["frozen", 99];
+// readonlyTuple[0] = "error"; // ❌ Cannot assign
+
+// 10. Enums (enum / const enum)
+// Standard enum generates a bi-directional lookup object at runtime. const enum is completely erased, and values are inlined directly into code.
+// Enums (TS specific): Named constants. Compiles to JS objects (or IIFEs)
+enum Color {
+  Red = 0,
+  Green = 1,
+  Blue = 2,
+}
+const myColor: Color = Color.Red;
+console.log(Color[0]); // "Red" (reverse lookup)
+// Normal enum exists at runtime
+// String enums
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+const dir: Direction = Direction.Up;
+
+// const enum is valid TypeScript, but it's not recommended in many projects because it's a TypeScript-only compile feature
+// const enum is erased during compilation it causes build errors so mostly avoid it
+// Const enum: completely erased at runtime, values inlined
+/*
+const enum Status {
+  Active = "ACTIVE",
+  Inactive = "INACTIVE"
+}
+// Inlined as "ACTIVE" in output
+const status: Status = Status.Active; 
+// compiles to 
+const status = "ACTIVE";
+*/
+// Mixed enum (not recommended)
+enum Mixed {
+  No = 0,
+  Yes = "YES",
+}
+// ==========================================
+// Runtime (Structural) Types
+// ==========================================
+//1. object (Standard)
+// Key-value hash maps. Keys are strings or symbols; values are pointers to other heap entities. V8 optimizes these using Hidden Classes (Shapes).
+const objType: object = {
+  name: "Pengu",
+  age: 20,
+};
+console.log(objType);
+
+// 2. Function
+// Executable callable objects. First-class citizens that close over their lexical scopes (Closures).
+const funType = (name: string): string => {
+  return `Hello ${name}`;
+};
+console.log(funType("Pengu"));
+
+// ==========================================
+// Refrence Types
+// ==========================================
+/*
+Reference Types (Objects) are dynamically allocated on the Heap.
+The Stack holds the variable (the reference/pointer), which points to the memory address on the Heap.
+*/
+interface User {
+  name: string;
+  age: number;
+  // add more properties
+  email?: string;
+}
+// If want to add multiple keys at once:
+// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
+// For arbitrary extra keys, use an index signature:
+// interface User {
+//   name: string;
+//   age: number;
+//   [key: string]: unknown;
+// }
+// Then:
+// userObj.email = "a@b.com";
+// userObj.city = "Delhi";
+
+// If you don't want to add the new keys to the interface:
+// Add them with a type assertion
+// (userObj as any).email = "alice@example.com";
+// or multiple:
+// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
+// Object.assign() is particularly convenient because you don't need to modify the interface
+
+// Better Way: create a new object
+// If don't want to weaken the type with any:
+// const newUser = { ...userObj, email: "a@b.com", city: "Delhi" };
+
+// 1. Objects (Key-Value pairs)
+// TS Interface defines the shape of an objects
+const userObject: User = { name: "Alice", age: 30 };
+// object operation
+// 'userObject' reference is constant, but `userObject.age` is mutable.
+console.log(`Object: ${JSON.stringify(userObject)}`);
+// - in js only the type of the key is restricted: it has to be a string
+// - but values can be primitive values can be array, object even function.
+// - the also key entities for OOP in js
+// Operations object:
+// Retrieving a value
+userObject["name"] = "Bob";
+userObject.name = "Don";
+// Check wheather value exists
+userObject.hasOwnProperty("name");
+// Looping over Object:
+// when wants keys only
+/**
+ * this code below is valid in js but not in ts, why?
+ * Object.keys() returns key as type string. But userObject is typed as User, which only allows keys "name" or "age". TypeScript doesn't know a plain string is one of those specific keys, so userObj[key] errors with something like:
+ * Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'User'
+ */
+for (const key of Object.keys(userObject)) {
+  // console.log(key, devObj [key]); // ❌ error
+}
+// fix tell TypeScript key is actually a key of User:
+// what fixed - The second loop (Object.entries) has the same underlying issue, but TS is more lenient there since value just becomes any, so it usually won't error
+for (const key of Object.keys(userObject) as (keyof User)[]) {
+  console.log(key, userObject[key]);
+}
+// When need both key and value
+for (const [key, value] of Object.entries(userObject)) {
+  console.log(key, value);
+}
+// Even cleaner
+// You can create a small helper:
+function typedKeys<T extends object>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+for (const key of typedKeys(userObject)) {
+  console.log(key, userObject[key]);
+}
+// Object Destructuring:
+// object destructuring syntax is a concise way to extract properties from an object and assign them to distinct variables.
+const weather = {
+  sun: "☀️",
+  sun_behind_small_cloud: "🌤️",
+  sun_behind_cloud: "⛅",
+  sun_behind_large_cloud: "🌥️",
+  sun_behind_rain_cloud: "🌦️",
+  cloud: "☁️",
+  cloud_with_rain: "🌧️",
+  cloud_with_snow: "🌨️",
+  cloud_with_lightning: "🌩️",
+  cloud_with_lightning_and_rain: "⛈️",
+};
+const { sun, cloud, cloud_with_lightning } = weather;
+sun;
+// => '☀️'
+cloud;
+// => '☁️'
+cloud_with_lightning;
+// => '🌩️'
+
+// 2. Arrays
+// Standard Array ([] / Array): A dynamically resizing sequence.
+// Under the hood, JS engines (like V8) optimize arrays
+// if elements are dense and sequential, they use a contiguous memory array
+// if elements are sparse, they automatically downgrade the layout to a slow,
+// dictionary-style hash table
+const arr = [1, 2, 3, 4, 5];
+let arrNum: number[] = [10, 20, 30];
+let arrStr: Array<string> = ["A", "B", "C"];
+console.log(`Array<number>: ${arrNum}`);
+console.log(`Array<string>: ${arrStr}`);
+
+// Generic syntax
+// Array Methods
+let arr1 = [1, 2, 3, 4, 5];
+console.log(`Original: ${arr1}`);
+// Arrays
+arr1.push(6); // Add to end -> [1,2,3,4,5,6] returns the new length of the array
+arr1.pop(); // Remove last -> 6 changes the length of the array
+arr1.shift(); // Remove first -> 1 changes the length of the array
+arr1.unshift(0); // Add to beginning -> [0,2,3,4,5]  returns the new length of the array
+// changes the contents of an array by removing or replacing existing elements and/or adding new elements in place
+arr1.splice; // method returns an array containing the deleted elements
+arr1.includes(3); // whether an array includes a certain value among its entries, returning true or false as appropriat
+arr1.every((num) => num % 2 !== 0); //  whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value
+arr1.some((num) => num % 2 !== 0); //  whether at least one element in the array passes the test implemented by the provided function
+arr1.find((num) => num < 5); //  returns the value of the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned
+arr1.findIndex((num) => num > 7); // returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test
+
+// Array Transformation: Some methods are (pure), meaning that they do not modify the original array
+
+// map (pure)
+// Create a new array by transforming each element according to a function passed as an argument. These callback functions are often written as arrow functions
+console.log(arr1.map((value) => value - 1));
+
+// filter (pure)
+// Creates an array by filtering the current one, given a filtering function (that returns true if the element should be kept and false if it should be removed)
+console.log(arr1.filter((value) => value % 2 === 0));
+
+// reduce(pure)
+// Reduces the array to a single value using a function that takes an accumulator and the current element of the array as parameters
+// This function instructs how the current element must be merged into the accumulator and returns the accumulator that will be used on the next iteration
+// arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+// reverse
+// Reverses the elements of an array.
+console.log(arr1.reverse());
+
+// slice(pure)
+// Given a start and an end index, creates a sub-array from the array it is called on.
+console.log(arr1.slice(1));
+
+// Splice
+// Removes or replaces and/or adds new elements of an array.
+// it takes - start index , number of element to delete , element to insert in array(optional)
+// Insert an element at index 2
+arr1.splice(2, 0, 3); // 0 values removed
+
+// Sort
+// By default, sort sorts the elements of an array by first converting them to strings and then applying string comparison
+// The sorting happens in-place which means the original array is modified.
+// sort also returns that modified array which is convenient if you want to chain other methods to it.
+arr1.sort();
+// To customize the sorting behavior, you can pass a comparison function as an argument.
+// The comparison function itself is called with two arguments which are two elements of the array. It then needs to return the following:
+// - a negative number if the first argument should be sorted before the second
+// - a positive number if the first argument should be sorted after the second
+// - 0 if the order of the elements should stay the same
+arr1.sort((a, b) => a - b);
+
+// Array Loops:
+// for loops
+// for..of loop
+// forEach - Array iteration
+arr1.forEach((num) => {
+  console.log(num);
+});
+
+// Map (transform each element)
+const squared = arr1.map((x) => x ** 2);
+// Filter
+const evens = arr1.filter((x) => x % 2 === 0);
+// Find
+const first_even = arr1.find((x) => x % 2 === 0);
+// Slice (get subset)
+const subset = arr1.slice(1, 4); // [2, 3, 4]
+// Spread operator
+const arr2 = [...arr1, 6, 7]; // Combine arrays
+
+// Typed strings and arrays
+const str2: string = "Hello";
+const numbers1: number[] = [1, 2, 3];
+
+// Array methods return typed values
+const doubledArr: number[] = numbers1.map((x) => x * 2);
+const evens2: number[] = numbers1.filter((x) => x % 2 === 0);
+
+// Type-safe find
+const found: number | undefined = numbers1.find((x) => x > 2);
+
+// Array Destructuring
+// Array destructuring syntax is a concise way to extract values from an array and assign them to distinct variables
+// each value in the numberOfMoons array is assigned to its corresponding planet:
+const numberOfMoons = [0, 2, 14];
+const [venus, mars, neptune] = numberOfMoons;
+neptune;
+// => 14
+
+// An array is a list that holds multiple items in order
+const fruits = ["apple", "banana", "orange"];
+console.log(fruits[0]); // "apple"
+// Array of numbers
+let arrayNumbers: number[] = [1, 2, 3];
+// Array of strings
+let names: string[] = ["Alice", "Bob"];
+// Mixed types (careful!)
+let mixed: (string | number)[] = [1, "hello", 2];
+
+// Way of creating Array in TypeScript
+// 1. Literal syntax (most common):
+let Array1: string[] = ["a", "b", "c"];
+// 2. Generic wrapper (same thing, different style):
+let Array2: Array<string> = ["a", "b", "c"];
+
+// Dense Dense and Sequential Array
+// Dense = no gaps
+// Sequential = items in order
+let arrDense = [10, 20, 30, 40];
+//         [0] [1] [2] [3]
+// All positions filled. JavaScript stores this fast in contiguous memory (side-by-side in RAM)
+
+// Sparse = has Gaps
+let arrSparse = [];
+arrSparse[0] = "a";
+arrSparse[5] = "b"; // positions 1,2,3,4 are empty
+// Missing positions = sparse. JavaScript downgrades to slow storage
+
+// ==========================================
+// Typed Arrays
+// ==========================================
+// TypedArrays: Contiguous, fixed-size, raw binary buffers optimized for high-performance graphics and network manipulation.
+
+// They consist of a backing raw memory allocation (ArrayBuffer) viewed through specific data lenses:
+// Int8Array, Uint8Array, Uint8ClampedArray (clamps values between 0-255).
+// Other Views:
+// Int8Array -> Signed 8-bit integers -> -128 to 127
+// Uint8Array -> Unsigned 8-bit integers -> 0 to 255
+// Uint8ClampedArray -> 0-255 (clamps overflow) -> Values capped at 0-255 -> If value is outside the range, it returns the closest boundary:
+// Int16Array -> Signed 16-bit integers -> -32,768 to 32,767
+// Uint16Array -> Unsigned 16-bit integers -> 0 to 65,535
+// Int32Array -> Signed 32-bit integers -> Large range
+// Uint32Array -> Unsigned 32-bit integers, Large range
+// Float32Array -> 32-bit decimals -> -3.4e38 to 3.4e38
+// Float64Array -> 64-bit decimals -> More precision
+// BigInt64Array -> 64-bit big integers -> Huge integers
+// BigUint64Array -> Unsigned big integers -> Huge positive integers
+
+// Normal arrays: can grow/shrink, hold any type
+// TypedArrays = one specific type, raw bytes, fixed-size containers for raw binary data (optimized for speed).
+
+// ArrayBuffer
+let bufferArr = new ArrayBuffer(16); // 16 bytes of empty memory
+// just raw bytes cant use it directly
+
+// Data Lenses(Views)
+let view = new Int32Array(bufferArr); // view as 32-bit integers
+// now can work with it
+view[0] = 42;
+console.log(view[0]); // 42
+
+// ==========================================
+// Keyed Collections:-
+// ==========================================
+// A keyed collection stores data as key–value pairs, where each value is accessed using its unique key
+
+// Map
+// Map: A genuine key-value dictionary. Unlike standard JS objects,
+//  keys can be of any type (including functions or object instances).
+// It preserves insertion order natively and uses deterministic hashing for $O(1)$ lookups
+// Methods and properties are:
+// new Map() – creates the map.
+// map.set(key, value) – stores the value by the key.
+// map.get(key) – returns the value by the key, undefined if key doesn’t exist in map.
+// map.has(key) – returns true if the key exists, false otherwise.
+// map.delete(key) – removes the element (the key/value pair) by the key.
+// map.clear() – removes everything from the map.
+// map.size – returns the current element count.
+
+let map = new Map();
+// Key difference: Map keys can be any type. Objects only allow strings/symbols.
+map.set("name", "John"); // string key
+map.set(1, "one"); // number key
+map.set(true, "yes"); // boolean key
+map.set({}, "object key"); // object key!
+map.set(() => {}, "function"); // function key!
+console.log(map.get("name")); // "John"
+console.log(map.get("age")); // 25
+
+// Preserves Insertion Order
+// Insertion order = the order you added items
+let insertionOrder = new Map();
+insertionOrder.set("first", 1);
+insertionOrder.set("second", 2);
+insertionOrder.set("third", 3);
+// Iterating returns them in order added:
+for (let [key, value] of insertionOrder) {
+  console.log(key, value);
+}
+
+// Map Idea Explained: it follows same idea as dictionary/object find key → get value
+// Dictionary/object: need to search through keys → potentially O(n)
+// Map: hashes the key → calculates where it should be → jumps there → average O(1)
+// key → hash → bucket → value
+// Hash: converts a key into a number that helps choose where to store/find it
+// A hash function takes data of any size and produces a fixed-size number
+
+// Map remebers
+// Hashing → finds WHERE the key is stored
+// Ordering → remembers WHEN the key was inserted
+// Even though the buckets may be scattered, Map separately remembers the insertion order
+// Basic Map Methods
+let mapMethods = new Map();
+// Add
+mapMethods.set("name", "John");
+// Get
+mapMethods.get("name"); // "John"
+// Check if exists
+mapMethods.has("name"); // true
+mapMethods.has("age"); // false
+// Delete
+mapMethods.delete("name");
+// Size
+console.log(mapMethods.size); // number of items
+
+// Object.entries
+// use built-in method Object.entries(obj) that returns an array of key/value pairs for an object exactly in that format.
+
+// WeakMap
+// key in weakmap should always be iterable
+// JavaScript engine keeps a value in memory while it is “reachable” and can potentially be used.
+//  A specialized `Map` where keys must be object or symbol references and those references are held _weakly_.
+// If a key object has no other references left, the entire entry is eligible for garbage collection, preventing memory leaks in caching or DOM tracking.
+// WeakMap
+// Keys must be objects or symbols.
+// Keys are held weakly.
+// If the key is no longer reachable, its entry can be garbage-collected.
+
+let weakkey1 = { id: 1 };
+const weakmap1 = new WeakMap<object, string>();
+weakmap1.set(weakmap1, "Secret data");
+console.log(weakmap1.get(weakmap1));
+// "Secret data"
+// Remove the only strong reference to the key
+weakkey1 = null as any;
+// The WeakMap no longer keeps the key alive.
+// The entry becomes eligible for garbage collection.
+
+// Map vs WeakMap
+let user = { name: "John" };
+const map1 = new Map();
+map1.set(user, "John's data");
+console.log(map1.get(user)); // "John's data"
+// Remove our reference
+user = null as any;
+// Map STILL has the object as a key
+console.log(map1.size); // 1
+const weakMap = new WeakMap();
+weakMap.set(user, "John's data");
+console.log(weakMap.get(user)); // "John's data"
+// Remove our reference
+user = null as any;
+// You cannot reliably demonstrate the exact return immediately, because JavaScript decides when garbage collection happens.
+// Also you cannot do:
+// weakMap.size       // ❌
+// weakMap.keys()     // ❌
+// weakMap.values()   // ❌
+// weakMap.entries()  // ❌
+// Because WeakMap does not let you inspect its entries
+// it gives you things Like:
+// weakMap.get(key);    // value or undefined
+// weakMap.set(key, value);
+// weakMap.has(key);    // true / false
+// weakMap.delete(key); // true / false
+
+// Set
+// A Set is a special type collection – “set of values” (without keys), where each value may occur only once.
+// A collection of unique values. Like `Map`
+// it tracks insertion order and leverages internal hashing
+// to evaluate item uniqueness in $O(1)$ time complexity, bypassing costly array traversals.
+// a set is a list like structure containing unique values, which can be primitives and/or object references.
+// Unlike an array, a set's elements cannot be accessed by index.
+// A value cannot be added to a set if it is strictly equal to any of the set's elements
+// Its main methods are:
+// new Set([iterable]) – creates the set, and if an iterable object is provided (usually an array), copies values from it into the set.
+// set.add(value) – adds a value, returns the set itself.
+// set.delete(value) – removes the value, returns true if value existed at the moment of the call, otherwise false.
+// set.has(value) – returns true if the value exists in the set, otherwise false.
+// set.clear() – removes everything from the set.
+// set.size – is the elements count.
+const set = new Set<unknown>();
+const object = { color: "lime green" };
+const functionallyIdenticalObject = { color: "lime green" };
+set.add(object);
+set.add("wow");
+set.add(77);
+console.log(set.size); // 3
+set.add(functionallyIdenticalObject); // added because functionallyIdenticalObject is not strictly equal to object
+console.log(set.size); // 4
+set.add(77); // not added because 77 is strictly equal to 77
+console.log(set.size); // 4
+// Iteration over Map and Set is always in the insertion order,
+// so we can’t say that these collections are unordered,
+// but we can’t reorder elements or directly get an element by its number
+
+// Normal set
+let setObj = { name: "A" };
+const normalSet = new Set();
+set.add(setObj);
+// conceptually -> obj ───────► { name: "A" }  ◄────── set
+// The Set keeps a reference to the object
+// So even if you do:
+setObj = null as any;
+// the object is still reachable through set -> set ───────► { name: "A" }, therefore garbage collection cannot remove it
+
+// WeakSet
+// A collection of unique objects held weakly.
+// Like `WeakMap`, objects inside a `WeakSet` are automatically garbage collected if no outside references point to them.
+let weakObj = { name: "A" };
+const ws = new WeakSet();
+ws.add(weakObj);
+// conceptually
+// obj ───────► { name: "A" }
+//              ▲
+//              │
+//           WeakSet
+//        (weak reference)
+// The WeakSet reference doesn't count as a strong reference for garbage collection
+// so when:
+weakObj = null as any; // elgible for garbage collection
+
+// ==========================================
+//  Type-Level Manipulations (Meta-Data Structures) / (Types as Data):
+// ==========================================
+// TypeScript handles types as data at compile time, Means TypeScript can take a type and create another type from it
+// it provides unique type-level structures to transform code safely before compilation
+// Just as you use functions to transform data at runtime, TypeScript allows you to treat types themselves as data at compile time.
+// Runtime analogy: uppercase("hello") transforms the string value "hello" into "HELLO".
+// Type-level equivalent: Uppercase<"hello"> transforms the literal type "hello" into the literal type "HELLO".
+// You are passing types into type-level functions (called Generics) to compute brand-new type definitions automatically.
+
+// ==========================================
+// Utility Transformation Structures(Type Morphing):
+// ==========================================
+// TypeScript includes global generic structures to morph existing type interfaces into altered states
+// Utility Types they are built-in generic types that modify existing types.
+// Partial<User>    // all properties optional
+// Required<User>   // all properties required
+// Readonly<User>   // all properties readonly
+// Pick<User, ...>  // choose some properties
+// Omit<User, ...>  // remove some properties
+// Instead of manually rewriting types when you need a variation of an existing interface, TypeScript gives you built-in functions (called Utility Types) to reshape them.
+
+interface Morph {
+  id: number;
+  name: string;
+  email?: string; // Optional property added to demonstrate Required<T>
+}
+
+// `Partial<T>` — Makes every property optional (?)
+// Maps all properties of an interface to be optional (`?`)
+type UpdateMorphInput = Partial<Morph>;
+// Resulting shape: { id?: number; name?: string; email?: string; }
+
+// `Required<T>` — Strips optional flags, forcing all properties to be explicitly defined
+// Uses `-?` under the hood to remove the optional modifier from all properties
+type StrictMorph = Required<Morph>;
+// Resulting shape: { id: number; name: string; email: string; }
+
+// `Readonly<T>` — Makes every property immutable
+// Prefixes all properties with a compile-time `readonly` modifier, blocking data mutations
+type LockedMorph = Readonly<Morph>;
+// Resulting shape: { readonly id: number; readonly name: string; readonly email?: string; }
+
+// `Record<K, T>` — Dictionary layout constructor
+// Constructs an object type layout with a set of explicit keys `K` mapped to a uniform value type `T`
+type UserRole = "admin" | "user" | "guest";
+type RolePermissions = Record<UserRole, boolean>;
+// Resulting shape: { admin: boolean; user: boolean; guest: boolean; }
+
+// `Pick<T, K>` — Extracts only specific fields
+// Extracts a chosen subset of keys `K` from a base type structure `T`
+type MorphContact = Pick<Morph, "name" | "email">;
+// Resulting shape: { name: string; email?: string; }
+
+// `Omit<T, K>` — Removes specific fields
+// Drops a chosen subset of keys `K` from a base type structure `T`
+type MorphWithoutId = Omit<Morph, "id">;
+// Resulting shape: { name: string; email?: string; }
+
+// ==========================================
+// Under The Hood (Mechanics & Custom Implementations):
+// ==========================================
+// These built-in structures use Mapped Types under the hood.
+// A mapped type iterates over the keys of an existing type using the `in keyof` operator to build a new one.
+
+// 1. CustomPartial<T>
+// `keyof T` extracts keys as a union ("id" | "name" | "email")
+// `[K in keyof T]` iterates over each key
+// `?:` appends the optional modifier
+// `T[K]` accesses the original property type
+type CustomPartial<T> = {
+  [K in keyof T]?: T[K];
+};
+
+// 2. CustomRequired<T>
+// `-?` explicitly strips the optional modifier (`?`) from each property
+type CustomRequired<T> = {
+  [K in keyof T]-?: T[K];
+};
+
+// 3. CustomReadonly<T>
+// Prefixes the property declaration with `readonly`
+type CustomReadonly<T> = {
+  readonly [K in keyof T]: T[K];
+};
+
+// 4. CustomRecord<K, T>
+// `K extends keyof any` enforces that K must be legal object key types (string | number | symbol)
+type CustomRecord<K extends keyof any, T> = {
+  [P in K]: T;
+};
+
+// 5. CustomPick<T, K>
+// `K extends keyof T` ensures you can only pick keys that actually exist on type `T`
+type CustomPick<T, K extends keyof T> = {
+  [P in K]: T[P];
+};
+
+// 6. CustomOmit<T, K>
+// Combines `Pick` and `Exclude`. `Exclude<keyof T, K>` filters out the keys matching `K`
+type CustomOmit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+
+// ==========================================
+// Mapped Type and Conditional Logic:
+// ==========================================
+// MAPPED TYPES
+// Mapped Types act like a Array.prototype.map() over type keys, while Conditional Types act like type-level if/else branching (evaluating type relationships using the extends keyword).
+// A Mapped Type constructs a new object type by iterating through a union of keys (typically derived via keyof T).
+// Homomorphic Mapping: When mapped directly over a generic parameter [P in keyof T], TypeScript automatically preserves modifiers like readonly and ? from the target type unless explicitly altered using explicit modifier operations (+ or -).
+// Key Remapping (as clause): Introduced in TS 4.1, you can alter key names during iteration using as. Returning never inside an as clause filters that key out entirely.
+// Creates new type fields by iterating over keys using an `in keyof` syntax loop:
+type Stringify<T> = {
+  [P in keyof T]: string 
+};
+// Modifiers: Adding (+) or Removing (-) flags explicitly
+// Remove Modifiers
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P] // Removes `readonly`
+};
+type Concrete<T> = {
+  [P in keyof T]-?: T[P]; // Removes `?` (optional)
+};
+// -readonly → remove readonly
+type Required<T> = {
+  [P in keyof T]-?: T[P]
+};
+// -? → remove optional ?
+// Rename keys with as
+// Key Remapping via `as` (Template Literals & Key Manipulation)
+type Getters<T> = {
+  [P in keyof T as `get${Capitalize<string & P>}`]: () => T[P]
+};
+// Advanced: Key Filtering inside Mapped Type (Removes non-string properties)
+type FilterStringProps<T> = {
+  [P in keyof T as T[P] extends string ? P : never]: T[P]
+};
+
+// CONDITIONAL TYPES - type-level if/else
+// Conditional types take the form: T extends U ? X : Y. If T matches or derives from U, the type resolves to X; otherwise Y.
+// Distributivity over Naked Type Parameters: If T is a "naked" generic type parameter (i.e., not wrapped in a tuple, array, or Promise like [T]), the conditional type automatically distributes over union types. IsString < string | mid number> => IsString <string> | IsString<number> => true | false
+// Preventing Distribution: Wrap both sides in a tuple: [T] extends [U] ? X : Y.
+// Type Inference (infer keyword): Used inside the true branch of a conditional type to declare a temporary type variable that TypeScript extracts from a pattern match.
+// Implements algorithmic branching paths directly inside type assignments using a ternary structural format:
+// Basic Type Branching
+type IsAString<T> = T extends string ? true : false;
+type testIsAString1 = IsAString<string>;  // true
+type testIsAString2 = IsAString<number>;  // false
+// Distributive Behavior over Unions
+// Union + Conditional = distributive
+type X = IsString<string | number>;
+// Evaluates to: (string extends string ? true : false) | (number extends string ? true : false)
+// Resolves to: true | false (boolean)
+// Non-Distributive Conditional Type (Prevents splitting unions)
+type IsUnionString<T> = [T] extends [string] ? true : false;
+type NonDistributed = IsUnionString<string | number>; // false (because `string | number` as a whole does not extend `string`)
+// Distributive Filtering Utility: Exclude<T, U>
+type CustomExclude<T, U> = T extends U ? never : T;
+type RemainingKeys = CustomExclude<"id" | "name" | "createdAt", "createdAt">; 
+// Resolves to: "id" | "name"
+
+// Inference Engine (`infer` Keyword)
+// Unwraps return type of a function signature (built-in ReturnType<T>)
+type CustomReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+// Unwraps nested Promise types recursively
+type AwaitedDeep<T> = T extends Promise<infer U> 
+  ? AwaitedDeep<U> 
+  : T;
+// Extract Array element type
+type ElementOf<T> = T extends (infer E)[] ? E : T;
+
+// Practical Demonstration Code
+interface UserProfile {
+  id: number;
+  username: string;
+  bio: string;
+  readonly isVerified: boolean;
+  avatarUrl?: string;
+}
+// Transform UserProfile into getter methods:
+// Output: { getId: () => number; getUsername: () => string; ... }
+type UserProfileGetters = Getters<UserProfile>;
+// Strip out non-string fields from UserProfile:
+// Output: { username: string; bio: string; avatarUrl?: string }
+type OnlyStringFields = FilterStringProps<UserProfile>;
+// Extract Return type of async API call
+async function fetchUser(): Promise<UserProfile> {
+  return { id: 1, username: "dev", bio: "ts fan", isVerified: true };
+}
+type FetchedUser = AwaitedDeep<ReturnType<typeof fetchUser>>; 
+// Resolves directly to: UserProfile
+
+
+// ==========================================
+// Parsing/Types Conversion
+// ==========================================
+let strNum: string = "42.5px";
+
+//  some built-in helpers
+// Boolean, Number, String
+// Number(value)
+// - if try to convert a non-primitive value or a string that does not represent a number, the result is NaN
+// Boolean(value)
+// know this - false, 0, empty string, null, undefined and NaN are Falsy
+// String to Number (Explicit)
+let parsedInt: number = parseInt(strNum, 10); // 42 (stops at non-numeric characters. '10' is the radix/base)
+let parsedFloat: number = parseFloat(strNum); // 42.5
+let castNumber: number = Number("42.5"); // 42.5 (Strict: Returns NaN if contains letters)
+let unaryCast: number = +"42.5"; // 42.5 (Shorthand for Number())
+
+// Number to String
+let numToStr1: string = parsedInt.toString();
+let numToStr2: string = String(parsedInt);
+let numToStr3: string = `${parsedInt}`; // Template literal coercion
+
+// Type assertions (compile-time only)
+// TypeScript Type Assertions (Casting at compile time only, no runtime effect):
+let unknownData: unknown = "Hello TS";
+let lengthOfData: number = (unknownData as string).length;
+let lengthAlt: number = (<string>unknownData).length; // Alternate syntax (clashes with React JSX)
+
+// Type Coercion
+// - JavaScript will automatically convert a value to another data type before it evaluates some statement.
+// - This implicit conversion is called type coercion.
+// In Boolean Context
+// - When a non-boolean value is used in a boolean context
+// In String Context
+// - Addition operator + is used for primitive values and one operand is a string, the other one will be coerced into a string as well
+// Numeric Context
+// - Many operators coerce the operands into numbers if necessary - unary +, - makes a valid string number
+
+
+// ==========================================
 // Type Checking
 // ==========================================
 // check the type of a piece of data at runtime using typeof operator
@@ -174,7 +1075,7 @@ console.log(typeof Symbol("id")); // "symbol"
 
 // typeof for Type Guards in Functions
 // Use typeof to validate input before processing
-function  valuePorcess(value: unknown): void {
+function valuePorcess(value: unknown): void {
   if (typeof value === "number") {
     console.log("Processing number:", value * 2);
   } else if (typeof value === "string") {
@@ -447,8 +1348,6 @@ if (validateUser(potentialUser)) {
 } else {
   console.log("Invalid user data");
 }
-
-
 // SECTION 11: Common Type Checking Mistakes
 // Mistake 3: Trusting `in` for private properties
 const obj4 = { public: "visible" };
@@ -462,709 +1361,6 @@ if ("key" in dynamicObj) {
   console.log(dynamicObj.key); // ✓ safe to access
 }
 
-// SECTION 12: Type Checking Quick Reference
-/*
-→ includes methods and inherited props
-Object.hasOwn(obj, "prop") → true if prop is OWN property (not inherited)
-→ safer than deprecated hasOwnProperty()
-Type Guards (if checks) → Combine multiple checks for type safety
-→ Enable TypeScript to narrow types
-*/
-
-// SECTION 13: Best Practices Summary
-/*
-✓ Use typeof for primitives and functions
-✓ Use instanceof for class instances and inheritance
-✓ Use Array.isArray() for array checking (not instanceof)
-✓ Use Object.hasOwn() to check own properties
-✓ Use `in` to check if property exists (including inherited)
-✓ Always check for null explicitly (typeof null === "object")
-✓ Combine checks for robust type guards
-✓ Use type predicates (is ValidType) for reusable validators
-✓ Let TypeScript narrow types after type checks
-✓ Avoid trusting a single check — combine multiple approaches
-*/
-
-
-// ==========================================
-// Built-in primitives
-// ==========================================
-// Primitives are immutable, passed by value, and stored on the Stack (usually, depending on engine implementation like V8). JS/TS has 7 primitive types.
-
-// 1. Number: IEEE 754 double-precision 64-bit floating point. (No separate int/float).
-// Number (IEEE 754 64-bit float, no separate int/float)
-// All numbers are double-precision 64-bit IEEE 754 floating-point values. No raw integer type exists at the base runtime.
-let numInt: number = 42;
-console.log(`number: ${numInt}`);
-let numFloat: number = 3.14159;
-console.log(`float: ${numFloat}`);
-let numHex: number = 0xff; // Hexadecimal
-console.log(`hex: ${numHex}`);
-let numBinary: number = 0b1010; // Binary
-console.log(`Binary: ${numBinary}`);
-
-// 2. BigInt: Arbitrary precision integers (for numbers larger than Number.MAX_SAFE_INTEGER: 2^53 - 1).
-// BigInt (arbitrary precision)
-// Arbitrary-precision integers. Allocates dynamic heap space to process numbers beyond the Safe Integer Limit ($\pm(2^{53} - 1)$).
-let bigIntVal: bigint = 9007199254740991n; // 'n' suffix
-console.log(`bigint: ${bigIntVal}`);
-// Rounding
-// There is a built-in global object called Math that provides various rounding functions.
-// For example, you can round down (floor) or round up (ceil) decimal numbers to nearest whole numbers
-Math.floor(234.34); // => 234
-Math.ceil(234.34); // => 235
-
-// 3. String: UTF-16 code units.
-// String (UTF-16) -> Immutable sequences of 16-bit UTF-16 code units, allocated and deduplicated via internal V8 string interning.
-// Creating a string
-("Hello, World!");
-("Hello, World!");
-// A string can be treated as index to acess string value.
-"cat"[1];
-// use .length to acess the length of string
-"cat".length;
-// to concate use
-"I like" + " " + "cats.";
-// some string methods
-// - toUpperCase and toLowerCase - change the case of all characters
-// - trim - remove whitespace at the beginning and end
-// - includes, startsWith and endsWith - determine whether another string is part of the given string
-// - slice - extract a section of the string
-let strSingle: string = "A";
-console.log(`String One char: ${strSingle}`);
-let strDouble: string = "Hello";
-console.log(`string: ${strDouble}`);
-const str1 = "Hello, World!";
-console.log(str1.length); // 13
-console.log(str1[0]); // 'H'
-console.log(str1.substring(0, 5)); // 'Hello'
-console.log(str1.includes("World")); // true
-console.log(str1.indexOf("World")); // 7
-console.log(str1.replace("World", "JavaScript")); // 'Hello, JavaScript!'
-console.log(str1.toUpperCase()); // 'HELLO, WORLD!'
-
-// 3. Boolean: true or false (1 byte conceptually).
-// Logical entities representing true or false.
-let isTrue: boolean = true;
-console.log(`boolean: ${isTrue}`);
-
-// null / undefined
-// Structural primitive singletons. undefined means a variable is uninitialized; null is an intentional empty object reference pointer.
-
-// 4. Null: Intentional absence of any object value.
-// Null (intentional absence)
-let nullVar: null = null;
-console.log(`null: ${nullVar}`);
-
-// 5. Undefined: Uninitialized variable. The default value of declared but unassigned variables.
-// Undefined (uninitialized)
-let uninitVar: undefined = undefined;
-console.log(`undefined: ${uninitVar}`);
-
-// 6. Symbol: Unique, immutable identifier (often used for hidden object properties).
-// Symbol (unique identifier)
-// Unique, immutable tokens generated globally or via the runtime symbol registry. Primarily used as non-clashing object keys.
-let sym: symbol = Symbol("uniqueKey");
-console.log(`symbol: ${sym.toString()}\n`);
-
-// ==========================================
-// Compile-Time Types
-// ==========================================
-// TS-Specific Types (Conceptual Primitives in TS):
-
-// 1. Any - The escape hatch. Turns off type checking completely, allowing any runtime operation.
-let anyVar: any = "Can be anything"; // Bypasses type checking (Avoid).
-console.log(`any: ${anyVar}`);
-
-// 2. Unknown - The type-safe counterpart to any. Represents any value, but forces you to perform runtime type-narrowing (e.g., typeof) before usage.
-let unknownVar: unknown = 42; // Type-safe counterpart to `any`. Requires type checking before use.
-console.log(`unknown: ${unknownVar}`);
-
-// 3. never - The bottom type. Represents the empty set of values—used for functions that never return (throw errors/infinite loops) or exhaustive switch matching.
-// Represents values that never occur (e.g., function that always throws)
-// never is not normally declared as a standalone variable
-// let neverVar: never;
-// Normally, we don't use never as a variable
-// mainly used for functions that never successfully return
-function getNever(): never {
-  throw new Error("Something went wrong");
-}
-try {
-  console.log(getNever());
-} catch (error) {
-  console.log(`error: ${error}`);
-  console.log(`typeof error: ${typeof error}`); // "object"
-}
-
-// 4. void - Represents the absence of a return value from a function. Resolves to undefined at runtime.
-const log = (): void => {};
-console.log(log()); // undefined
-console.log(`void: `, typeof log()); // "undefined"
-
-// 5. Destructuring assignment ts perform type inference here
-const [destructX, destructY] = [10, 20];
-// type inferenced
-// const { name, age } = { name: "Alice", age: 25 };
-// if want to define type explicity
-// const { MyName, MyAge }: { name: string; age: number } = { name: "Alice", age: 25 };
-
-// 5. Union types
-// allow multiple type & values - can be custom type
-let id: string | number;
-id = "ABC123"; // OK
-id = 123; // OK
-
-// 6. Literal Types
-// Restricts a variable down to a specific exact string, number, or boolean value
-type direction = "left" | "right";
-let literalType: direction = "left"; // or "right"
-
-// 7. Type Alias
-//  create reusable custom types
-// gives a name to any type
-type ID = string | number;
-const aliasType1: ID = 123;
-const aliasType2: ID = "ABCD";
-console.log(typeof aliasType1);
-console.log(typeof aliasType2);
-
-// TS Compile-Time (Advanced Types)
-// Enforces Structural Subtyping (Duck Typing). If two shapes match, their types are compatible, regardless of explicit inheritance.
-
-// 8. Structural Interfaces
-// Interface for type safety
-// object | class structure / contract
-// defines structure of object like type alias mainly for object shapes
-interface User {
-  name: string;
-  age: number;
-}
-// const obj: { [key: string]: string } = {};
-// const obj: Record<string, unknown> = {};
-
-// 9. Tuples
-// Fixed-length arrays with strictly assigned types at explicit index positions (e.g., [string, number]). Compiles down to a standard JS array.
-// Tuples (TS specific): Fixed-length array with predefined types at each index.
-let myTuple: [string, number, boolean] = ["Bob", 25, true];
-console.log(`Tuple: ${JSON.stringify(myTuple)}`);
-type StringNumberTuple = [string, number];
-const tuple1: StringNumberTuple = ["hello", 42];
-const tuple2: [string, number, boolean] = ["test", 100, true];
-// Optional tuple elements
-type OptionalTuple = [string, number?];
-const optional1: OptionalTuple = ["name"];
-const optional2: OptionalTuple = ["name", 25];
-// Variadic tuples (rest elements)
-type StringNumberRest = [string, ...number[]];
-const variadic: StringNumberRest = ["id", 1, 2, 3];
-// Readonly tuples
-type ReadonlyTup = readonly [string, number];
-const readonlyTuple: ReadonlyTup = ["frozen", 99];
-// readonlyTuple[0] = "error"; // ❌ Cannot assign
-
-// 10. Enums (enum / const enum)
-// Standard enum generates a bi-directional lookup object at runtime. const enum is completely erased, and values are inlined directly into code.
-// Enums (TS specific): Named constants. Compiles to JS objects (or IIFEs)
-enum Color {
-  Red = 0,
-  Green = 1,
-  Blue = 2,
-}
-const myColor: Color = Color.Red;
-console.log(Color[0]); // "Red" (reverse lookup)
-// Normal enum exists at runtime
-// String enums
-enum Direction {
-  Up = "UP",
-  Down = "DOWN",
-  Left = "LEFT",
-  Right = "RIGHT",
-}
-const dir: Direction = Direction.Up;
-
-// const enum is valid TypeScript, but it's not recommended in many projects because it's a TypeScript-only compile feature
-// const enum is erased during compilation it causes build errors so mostly avoid it
-// Const enum: completely erased at runtime, values inlined
-/*
-const enum Status {
-  Active = "ACTIVE",
-  Inactive = "INACTIVE"
-}
-// Inlined as "ACTIVE" in output
-const status: Status = Status.Active; 
-// compiles to 
-const status = "ACTIVE";
-*/
-// Mixed enum (not recommended)
-enum Mixed {
-  No = 0,
-  Yes = "YES",
-}
-// ==========================================
-// Runtime (Structural) Types
-// ==========================================
-//1. object (Standard)
-// Key-value hash maps. Keys are strings or symbols; values are pointers to other heap entities. V8 optimizes these using Hidden Classes (Shapes).
-const objType: object = {
-  name: "Pengu",
-  age: 20,
-};
-console.log(objType);
-
-// 2. Function
-// Executable callable objects. First-class citizens that close over their lexical scopes (Closures).
-const funType = (name: string): string => {
-  return `Hello ${name}`;
-};
-console.log(funType("Pengu"));
-
-// ==========================================
-// Refrence Types
-// ==========================================
-/*
-Reference Types (Objects) are dynamically allocated on the Heap.
-The Stack holds the variable (the reference/pointer), which points to the memory address on the Heap.
-*/
-interface User {
-  name: string;
-  age: number;
-  // add more properties
-  email?: string;
-}
-// If want to add multiple keys at once:
-// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
-// For arbitrary extra keys, use an index signature:
-// interface User {
-//   name: string;
-//   age: number;
-//   [key: string]: unknown;
-// }
-// Then:
-// userObj.email = "a@b.com";
-// userObj.city = "Delhi";
-
-// If you don't want to add the new keys to the interface:
-// Add them with a type assertion
-// (userObj as any).email = "alice@example.com";
-// or multiple:
-// Object.assign(userObj, { email: "a@b.com", city: "Delhi" });
-// Object.assign() is particularly convenient because you don't need to modify the interface
-
-// Better Way: create a new object
-// If don't want to weaken the type with any:
-// const newUser = { ...userObj, email: "a@b.com", city: "Delhi" };
-
-// 1. Objects (Key-Value pairs)
-// TS Interface defines the shape of an objects
-const usersObj: User = { name: "Alice", age: 30 };
-// object operation
-// 'devObj' reference is constant, but `devObj.age` is mutable.
-console.log(`Object: ${JSON.stringify(usersObj)}`);
-// - in js only the type of the key is restricted: it has to be a string
-// - but values can be primitive values can be array, object even function.
-// - the also key entities for OOP in js
-// Operations object:
-// Retrieving a value
-usersObj["name"] = "Bob";
-usersObj.name = "Don";
-// Check wheather value exists
-usersObj.hasOwnProperty("name");
-// Looping over Object:
-// when wants keys only
-/**
- * this code below is valid in js but not in ts, why?
- * Object.keys() returns key as type string. But userObj is typed as User, which only allows keys "name" or "age". TypeScript doesn't know a plain string is one of those specific keys, so userObj[key] errors with something like:
- * Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'User'
- */
-for (const key of Object.keys(usersObj)) {
-  // console.log(key, devObj [key]); // ❌ error
-}
-// fix tell TypeScript key is actually a key of User:
-// what fixed - The second loop (Object.entries) has the same underlying issue, but TS is more lenient there since value just becomes any, so it usually won't error
-for (const key of Object.keys(usersObj) as (keyof User)[]) {
-  console.log(key, usersObj[key]);
-}
-// When need both key and value
-for (const [key, value] of Object.entries(devObj)) {
-  console.log(key, value);
-}
-// Even cleaner
-// You can create a small helper:
-function typedKeys<T extends object>(obj: T): (keyof T)[] {
-  return Object.keys(obj) as (keyof T)[];
-}
-for (const key of typedKeys(usersObj)) {
-  console.log(key, usersObj[key]);
-}
-// Object Destructuring:
-// object destructuring syntax is a concise way to extract properties from an object and assign them to distinct variables.
-const weather = {
-  sun: "☀️",
-  sun_behind_small_cloud: "🌤️",
-  sun_behind_cloud: "⛅",
-  sun_behind_large_cloud: "🌥️",
-  sun_behind_rain_cloud: "🌦️",
-  cloud: "☁️",
-  cloud_with_rain: "🌧️",
-  cloud_with_snow: "🌨️",
-  cloud_with_lightning: "🌩️",
-  cloud_with_lightning_and_rain: "⛈️",
-};
-const { sun, cloud, cloud_with_lightning } = weather;
-sun;
-// => '☀️'
-cloud;
-// => '☁️'
-cloud_with_lightning;
-// => '🌩️'
-
-// 2. Arrays
-// Standard Array ([] / Array): A dynamically resizing sequence.
-// Under the hood, JS engines (like V8) optimize arrays
-// if elements are dense and sequential, they use a contiguous memory array
-// if elements are sparse, they automatically downgrade the layout to a slow,
-// dictionary-style hash table
-const arr = [1, 2, 3, 4, 5];
-let arrNum: number[] = [10, 20, 30];
-let arrStr: Array<string> = ["A", "B", "C"];
-console.log(`Array<number>: ${arrNum}`);
-console.log(`Array<string>: ${arrStr}`);
-// Generic syntax
-// Array Methods
-let arr1 = [1, 2, 3, 4, 5];
-console.log(`Original: ${arr1}`);
-
-// Arrays
-arr1.push(6); // Add to end -> [1,2,3,4,5,6] returns the new length of the array
-arr1.pop(); // Remove last -> 6 changes the length of the array
-arr1.shift(); // Remove first -> 1 changes the length of the array
-arr1.unshift(0); // Add to beginning -> [0,2,3,4,5]  returns the new length of the array
-// changes the contents of an array by removing or replacing existing elements and/or adding new elements in place
-arr1.splice; // method returns an array containing the deleted elements
-arr1.includes(3); // whether an array includes a certain value among its entries, returning true or false as appropriat
-arr1.every((num) => num % 2 !== 0); //  whether all elements in the array pass the test implemented by the provided function. It returns a Boolean value
-arr1.some((num) => num % 2 !== 0); //  whether at least one element in the array passes the test implemented by the provided function
-arr1.find((num) => num < 5); //  returns the value of the first element in the provided array that satisfies the provided testing function. If no values satisfy the testing function, undefined is returned
-arr1.findIndex((num) => num > 7); // returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test
-
-// Array Transformation: Some methods are (pure), meaning that they do not modify the original array
-// map (pure)
-// Create a new array by transforming each element according to a function passed as an argument. These callback functions are often written as arrow functions
-console.log(arr1.map((value) => value - 1));
-// filter (pure)
-// Creates an array by filtering the current one, given a filtering function (that returns true if the element should be kept and false if it should be removed)
-console.log(arr1.filter((value) => value % 2 === 0));
-// reduce(pure)
-// Reduces the array to a single value using a function that takes an accumulator and the current element of the array as parameters
-// This function instructs how the current element must be merged into the accumulator and returns the accumulator that will be used on the next iteration
-// arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-// reverse
-// Reverses the elements of an array.
-console.log(arr1.reverse());
-// slice(pure)
-// Given a start and an end index, creates a sub-array from the array it is called on.
-console.log(arr1.slice(1));
-// Splice
-// Removes or replaces and/or adds new elements of an array.
-// it takes - start index , number of element to delete , element to insert in array(optional)
-// Insert an element at index 2
-arr1.splice(2, 0, 3); // 0 values removed
-// Sort
-// By default, sort sorts the elements of an array by first converting them to strings and then applying string comparison
-// The sorting happens in-place which means the original array is modified.
-// sort also returns that modified array which is convenient if you want to chain other methods to it.
-arr1.sort();
-// To customize the sorting behavior, you can pass a comparison function as an argument.
-// The comparison function itself is called with two arguments which are two elements of the array. It then needs to return the following:
-// - a negative number if the first argument should be sorted before the second
-// - a positive number if the first argument should be sorted after the second
-// - 0 if the order of the elements should stay the same
-arr1.sort((a, b) => a - b);
-
-// Array Loops:
-// for loops
-// for..of loop
-// forEach - Array iteration
-arr1.forEach((num) => {
-  console.log(num);
-});
-
-// Map (transform each element)
-const squared = arr1.map((x) => x ** 2);
-// Filter
-const evens = arr1.filter((x) => x % 2 === 0);
-// Find
-const first_even = arr1.find((x) => x % 2 === 0);
-// Slice (get subset)
-const subset = arr1.slice(1, 4); // [2, 3, 4]
-// Spread operator
-const arr2 = [...arr1, 6, 7]; // Combine arrays
-
-// Typed strings and arrays
-const str2: string = "Hello";
-const numbers1: number[] = [1, 2, 3];
-
-// Array methods return typed values
-const doubledArr: number[] = numbers1.map((x) => x * 2);
-const evens2: number[] = numbers1.filter((x) => x % 2 === 0);
-
-// Type-safe find
-const found: number | undefined = numbers1.find((x) => x > 2);
-
-// Array Destructuring
-// Array destructuring syntax is a concise way to extract values from an array and assign them to distinct variables
-// each value in the numberOfMoons array is assigned to its corresponding planet:
-const numberOfMoons = [0, 2, 14];
-const [venus, mars, neptune] = numberOfMoons;
-neptune;
-// => 14
-
-// An array is a list that holds multiple items in order
-const fruits = ["apple", "banana", "orange"];
-console.log(fruits[0]); // "apple"
-// Array of numbers
-let arrayNumbers: number[] = [1, 2, 3];
-// Array of strings
-let names: string[] = ["Alice", "Bob"];
-// Mixed types (careful!)
-let mixed: (string | number)[] = [1, "hello", 2];
-
-// Way of creating Array in TypeScript
-// 1. Literal syntax (most common):
-let Array1: string[] = ["a", "b", "c"];
-// 2. Generic wrapper (same thing, different style):
-let Array2: Array<string> = ["a", "b", "c"];
-
-// Dense Dense and Sequential Array
-// Dense = no gaps
-// Sequential = items in order
-let arrDense = [10, 20, 30, 40];
-//         [0] [1] [2] [3]
-// All positions filled. JavaScript stores this fast in contiguous memory (side-by-side in RAM)
-
-// Sparse = has Gaps
-let arrSparse = [];
-arrSparse[0] = "a";
-arrSparse[5] = "b"; // positions 1,2,3,4 are empty
-// Missing positions = sparse. JavaScript downgrades to slow storage
-
-// ==========================================
-// Typed Arrays
-// ==========================================
-// TypedArrays: Contiguous, fixed-size, raw binary buffers optimized for high-performance graphics and network manipulation.
-// They consist of a backing raw memory allocation (ArrayBuffer) viewed through specific data lenses:
-// Int8Array, Uint8Array, Uint8ClampedArray (clamps values between 0-255).
-// Int16Array, Uint16Array, Int32Array, Uint32Array.
-// Float32Array, Float64Array, BigInt64Array, BigUint64Array
-
-// TypedArrays = fixed-size containers for raw binary data (optimized for speed).
-// Normal arrays: can grow/shrink, hold any type
-// TypedArrays: fixed size, one specific type, raw bytes
-
-// ArrayBuffer
-let bufferArr = new ArrayBuffer(16); // 16 bytes of empty memory
-// just raw bytes cant use it directly
-
-// Data Lenses(Views)
-let view = new Int32Array(bufferArr); // view as 32-bit integers
-// now can work with it
-view[0] = 42;
-console.log(view[0]); // 42
-
-// Other Views
-// Int8Array -> Signed 8-bit integers -> -128 to 127
-// Uint8Array -> Unsigned 8-bit integers -> 0 to 255
-// Uint8ClampedArray -> 0-255 (clamps overflow) -> Values capped at 0-255 -> If value is outside the range, it returns the closest boundary:
-// Int16Array -> Signed 16-bit integers -> -32,768 to 32,767
-// Uint16Array -> Unsigned 16-bit integers -> 0 to 65,535
-// Int32Array -> Signed 32-bit integers -> Large range
-// Uint32Array -> Unsigned 32-bit integers, Large range
-// Float32Array -> 32-bit decimals -> -3.4e38 to 3.4e38
-// Float64Array -> 64-bit decimals -> More precision
-// BigInt64Array -> 64-bit big integers -> Huge integers
-// BigUint64Array -> Unsigned big integers -> Huge positive integers
-
-// ==========================================
-// Keyed Collections:-
-// ==========================================
-// A keyed collection stores data as key–value pairs, where each value is accessed using its unique key
-
-// ==========================================
-// Map
-// ==========================================
-// Map: A genuine key-value dictionary. Unlike standard JS objects,
-//  keys can be of any type (including functions or object instances).
-// It preserves insertion order natively and uses deterministic hashing for $O(1)$ lookups.
-
-let map = new Map();
-// Key difference: Map keys can be any type. Objects only allow strings/symbols.
-map.set("name", "John"); // string key
-map.set(1, "one"); // number key
-map.set(true, "yes"); // boolean key
-map.set({}, "object key"); // object key!
-map.set(() => {}, "function"); // function key!
-console.log(map.get("name")); // "John"
-console.log(map.get("age")); // 25
-
-// Preserves Insertion Order
-// Insertion order = the order you added items
-let insertionOrder = new Map();
-insertionOrder.set("first", 1);
-insertionOrder.set("second", 2);
-insertionOrder.set("third", 3);
-
-// Iterating returns them in order added:
-for (let [key, value] of insertionOrder) {
-  console.log(key, value);
-}
-
-// Map Idea Explained: it follows same idea as dictionary/object find key → get value
-// Dictionary/object: need to search through keys → potentially O(n)
-// Map: hashes the key → calculates where it should be → jumps there → average O(1)
-// key → hash → bucket → value
-
-// Hash: converts a key into a number that helps choose where to store/find it
-// A hash function takes data of any size and produces a fixed-size number
-
-// // Map remebers
-// Hashing → finds WHERE the key is stored
-// Ordering → remembers WHEN the key was inserted
-// Even though the buckets may be scattered, Map separately remembers the insertion order
-
-// Basic Map Methods
-let mapMethods = new Map();
-// Add
-mapMethods.set("name", "John");
-// Get
-mapMethods.get("name"); // "John"
-// Check if exists
-mapMethods.has("name"); // true
-mapMethods.has("age"); // false
-// Delete
-mapMethods.delete("name");
-// Size
-console.log(mapMethods.size); // number of items
-
-// ==========================================
-// Set
-// ==========================================
-// A collection of unique values. Like `Map`
-// it tracks insertion order and leverages internal hashing
-// to evaluate item uniqueness in $O(1)$ time complexity, bypassing costly array traversals.
-// a set is a list like structure containing unique values, which can be primitives and/or object references.
-// Unlike an array, a set's elements cannot be accessed by index.
-// A value cannot be added to a set if it is strictly equal to any of the set's elements
-const set = new Set<unknown>();
-const object = { color: 'lime green' };
-const functionallyIdenticalObject = { color: 'lime green' };
-set.add(object);
-set.add('wow');
-set.add(77);
-console.log(set.size); // 3
-set.add(functionallyIdenticalObject); // added because functionallyIdenticalObject is not strictly equal to object
-console.log(set.size); // 4
-set.add(77); // not added because 77 is strictly equal to 77
-console.log(set.size); // 4
-
-
-// ==========================================
-// WeakMap
-// ==========================================
-//  A specialized `Map` where keys must be object or symbol references and those references are held _weakly_.
-// If a key object has no other references left, the entire entry is eligible for garbage collection, preventing memory leaks in caching or DOM tracking.
-
-// ==========================================
-// WeakSet
-// ==========================================
-// A collection of unique objects held weakly.
-// Like `WeakMap`, objects inside a `WeakSet` are automatically garbage collected if no outside references point to them.
-
-// ==========================================
-//  Type-Level Manipulations (Meta-Data Structures)
-// ==========================================
-// TypeScript handles types as data at compile time,
-// it provides unique type-level structures to transform code safely before compilation
-
-// ==========================================
-// Utility Transformation Structures
-// ==========================================
-// TypeScript includes global generic structures to morph existing type interfaces into altered states
-
-// ==========================================
-// `Partial<T>`
-// ==========================================
-// Maps all properties of an interface to be optional (`?`)
-
-// ==========================================
-// `Required<T>`
-// ==========================================
-// Strips optional flags, forcing all properties to be explicitly defined
-
-// ==========================================
-// `Readonly<T>`
-// ==========================================
-// Prefixes all properties with a compile-time `readonly` modifier, blocking data mutations
-
-// ==========================================
-// `Record<K, T>`
-// ==========================================
-// Constructs an object type layout with a set of explicit keys `K` mapped to a uniform value type `T`
-
-// ==========================================
-// `Pick<T, K>` / `Omit<T, K>`
-// ==========================================
-// Extracts or drops a chosen subset of keys `K` from a base type structure `T`.
-
-// ==========================================
-// Conditional and Mapped Type Logic
-// ==========================================
-// Mapped Types
-// ==========================================
-// Creates new type fields by iterating over keys using an `in keyof` syntax loop:
-type Stringify<T> = { [P in keyof T]: string };
-// ==========================================
-// Conditional Types
-// ==========================================
-//  Implements algorithmic branching paths directly inside type assignments using a ternary structural format:
-type IsString<T> = T extends string ? true : false;
-
-// ==========================================
-// Parsing/Types Conversion
-// ==========================================
-let strNum: string = "42.5px";
-
-//  some built-in helpers
-// Boolean, Number, String
-// Number(value)
-// - if try to convert a non-primitive value or a string that does not represent a number, the result is NaN
-// Boolean(value)
-// know this - false, 0, empty string, null, undefined and NaN are Falsy
-// String to Number (Explicit)
-let parsedInt: number = parseInt(strNum, 10); // 42 (stops at non-numeric characters. '10' is the radix/base)
-let parsedFloat: number = parseFloat(strNum); // 42.5
-let castNumber: number = Number("42.5"); // 42.5 (Strict: Returns NaN if contains letters)
-let unaryCast: number = +"42.5"; // 42.5 (Shorthand for Number())
-
-// Number to String
-let numToStr1: string = parsedInt.toString();
-let numToStr2: string = String(parsedInt);
-let numToStr3: string = `${parsedInt}`; // Template literal coercion
-
-// Type assertions (compile-time only)
-// TypeScript Type Assertions (Casting at compile time only, no runtime effect):
-let unknownData: unknown = "Hello TS";
-let lengthOfData: number = (unknownData as string).length;
-let lengthAlt: number = (<string>unknownData).length; // Alternate syntax (clashes with React JSX)
-
-// Type Coercion
-// - JavaScript will automatically convert a value to another data type before it evaluates some statement.
-// - This implicit conversion is called type coercion.
-// In Boolean Context
-// - When a non-boolean value is used in a boolean context
-// In String Context
-// - Addition operator + is used for primitive values and one operand is a string, the other one will be coerced into a string as well
-// Numeric Context
-// - Many operators coerce the operands into numbers if necessary - unary +, - makes a valid string number
 
 // ==========================================
 // Operators
@@ -1277,11 +1473,13 @@ interface User {
 // - ?. (Optional Chaining):
 // Safely accesses deeply nested properties
 // With the optional chaining operator ?. you can ensure that JavaScript only tries to access the nested key if the parent was not null or undefined.
+let devObj: { name: string } | undefined = { name: "Alice" };
 let optChain1 = devObj?.name;
 console.log(`Optional chaining: userObj?.name = ${optChain1}\n`);
 
 let mathRes: number = 10 ** 2 % 3; // 100 % 3 = 1
 let strictCheck: boolean = 10 === 10;
+let nullVarr: string | null = null;
 let nullishRes = nullVar ?? "Default Value"; // Evaluates to "Default Value"
 let optChain = devObj?.name; // Evaluates to "Alice" without throwing if userObj is undefined.
 
@@ -1329,6 +1527,7 @@ for (const val of arrNum) {
 for (const key in devObj) {
   // key is "name", then "age"
 }
+
 // ==========================================
 // Import Export
 // ==========================================
@@ -1351,9 +1550,7 @@ for (const key in devObj) {
 
 /*
 Entry point (Node.js)
-if (require.main === module) {
-    console.log(add(5, 3));
-}
+if (require.main === module) { console.log(add(5, 3)); }
 */
 // import * as readline from "node:readline";
 // ==========================================
@@ -1378,7 +1575,6 @@ Standard Input (Node.js Environment via 'readline')
 //   console.log(answer);
 //   rl.close();
 // });
-
 // ==========================================
 // Formatting
 // ==========================================
@@ -1408,6 +1604,7 @@ const formatted = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 }).format(intlValue);
 console.log(formatted); // "42.00"
+
 
 // ==========================================
 // Function basics (Definitions & Context)
@@ -1612,6 +1809,8 @@ function factorial(n: number): number {
   return n * factorial(n - 1);
 }
 
+
+
 // ==========================================
 // Scope & Closures
 // ==========================================
@@ -1756,6 +1955,7 @@ function processInput(value: string | number): string | number {
   }
   return value * 2;
 }
+
 
 // ==========================================
 // Error Handling
@@ -1951,6 +2151,7 @@ function executeSafely(fn: () => void): void {
 executeSafely(() => {
   throw new TypeError("Example forced error");
 });
+
 
 // ==========================================
 // DOM (Document Object Model)
@@ -6484,3 +6685,4 @@ async function loadModuleDynamically(): Promise<void> {
 // ✅ Advanced Destructuring — Nested patterns, rest, defaults, computed property names
 // ✅ Secondary Gaps — Object.freeze/seal/defineProperty, Memory & GC (reference counting vs mark-and-sweep, leak patterns), Modules (import/export patterns, circular dependencies)
 // ⏭️ Skipped (already covered): Generators/Iterators, Collections (Map/Set/WeakMap), Prototype Chain, Regex
+
