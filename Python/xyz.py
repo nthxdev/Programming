@@ -184,7 +184,7 @@ def main():
 
     # Loop Control: 'break', 'continue', and 'else'
     # Python loops can have an 'else' block which executes ONLY if the loop finishes naturally (no break).
-    for num in range(3):
+    for num in range(6):
         if num == 5:
             break
     else:
@@ -292,45 +292,45 @@ def modify_data(num: int, arr: list) -> list:
     
     return arr
 
-    # Function with return value
-    def add_numbers(a: int, b: int) -> int:
-        """Simple function with type hints."""
-        return a + b
-    
-    result = add_numbers(5, 10)
-    print(f"add_numbers(5, 10) = {result}")
-    
-    # Pass by object reference demonstration
-    def modify_primitive(num: int) -> None:
-        num = 999
-        print(f"  Inside function (primitive): {num}")
-    
-    def modify_list(lst: list) -> None:
-        lst.append(999)
-        print(f"  Inside function (list): {lst}")
-    
-    # Primitive (immutable)
-    original_int = 10
-    print(f"\nBefore modify_primitive: {original_int}")
-    modify_primitive(original_int)
-    print(f"After modify_primitive: {original_int} (unchanged)")
-    
-    # List (mutable)
-    original_list = [1, 2, 3]
-    print(f"\nBefore modify_list: {original_list}")
-    modify_list(original_list)
-    print(f"After modify_list: {original_list} (modified!)")
-    
-    # Default parameters
-    def greet(name: str, greeting: str = "Hello") -> str:
-        return f"{greeting}, {name}!"
-    
-    print(f"\ngreet('Alice'): {greet('Alice')}")
-    print(f"greet('Bob', 'Hi'): {greet('Bob', 'Hi')}")
-    
-    # Variable length arguments
-    def sum_all(*numbers: int) -> int:
-        return sum(numbers)
+# Function with return value
+def add_numbers(a: int, b: int) -> int:
+    """Simple function with type hints."""
+    return a + b
+
+result = add_numbers(5, 10)
+print(f"add_numbers(5, 10) = {result}")
+
+# Pass by object reference demonstration
+def modify_primitive(num: int) -> None:
+    num = 999
+    print(f"  Inside function (primitive): {num}")
+
+def modify_list(lst: list) -> None:
+    lst.append(999)
+    print(f"  Inside function (list): {lst}")
+
+# Primitive (immutable)
+original_int = 10
+print(f"\nBefore modify_primitive: {original_int}")
+modify_primitive(original_int)
+print(f"After modify_primitive: {original_int} (unchanged)")
+
+# List (mutable)
+original_list = [1, 2, 3]
+print(f"\nBefore modify_list: {original_list}")
+modify_list(original_list)
+print(f"After modify_list: {original_list} (modified!)")
+
+# Default parameters
+def greet(name: str, greeting: str = "Hello") -> str:
+    return f"{greeting}, {name}!"
+
+print(f"\ngreet('Alice'): {greet('Alice')}")
+print(f"greet('Bob', 'Hi'): {greet('Bob', 'Hi')}")
+
+# Variable length arguments
+def sum_all(*numbers: int) -> int:
+    return sum(numbers)
 
     
 # Execution Flow entry point mapping (Similar to public static void main)

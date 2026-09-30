@@ -2,6 +2,7 @@
 #include <stdlib.h>  // Standard library (malloc, free, strtol, atoi)
 #include <stdbool.h> // Boolean support (true, false)
 #include <string.h>  // String manipulation (strcpy, strlen)
+#include <cs50.h>
 
 // ==========================================
 // 13. FUNCTION DECLERATION (PROTOTYPES)
@@ -179,6 +180,7 @@ int main(void)
     strcat(combined, str2); // Add str2
     printf("Combined: %s\n", combined);
 
+
     // --- HEAP ---
     // --- Dynamic Memory (The Heap) ---
     // Requires manual allocation and deallocation.
@@ -241,14 +243,20 @@ int main(void)
     // ==========================================
     // C evaluates 0 as false, and ANY non-zero value as true.
 
-    if (intVar > 0 && boolVar){
+    if (intVar > 0 && boolVar)
+    {
         // executes if condition is true
-    } else if (!boolVar){
+    }
+    else if (!boolVar)
+    {
         // Nested logic
-        if (arrInt[0] == 10){
+        if (arrInt[0] == 10)
+        {
             // deep scope
         }
-    } else {
+    }
+    else
+    {
         // fallback
     }
 
@@ -257,7 +265,8 @@ int main(void)
     // ==========================================
     int switchVar = 2;
     // switch ONLY evaluates integral types (char, short, int, long, enum). No strings/floats.
-    switch (switchVar){
+    switch (switchVar)
+    {
     case 1:
         // logic
         break;
@@ -281,7 +290,9 @@ int main(void)
 
     // Nested ternary
     int score = 85;
-    char *grade = (score >= 90) ? "A" : (score >= 80) ? "B" : (score >= 70)   ? "C" : "F";
+    char *grade = (score >= 90) ? "A" : (score >= 80) ? "B"
+                                    : (score >= 70)   ? "C"
+                                                      : "F";
     printf("Grade: %s\n", grade);
 
     // ==========================================
@@ -290,20 +301,23 @@ int main(void)
 
     // While loop
     int w = 0;
-    while (w < 3){
+    while (w < 3)
+    {
         // do something
         w++;
     }
 
     // Do-while (Guaranteed one execution)
     int dw = 0;
-    do{
+    do
+    {
         // do something
         dw++;
     } while (dw < 0);
 
     // For loop
-    for (int i = 0; i < 5; i++){
+    for (int i = 0; i < 5; i++)
+    {
         // do something
         if (i == 2)
             continue; // Skip iteration
@@ -312,8 +326,10 @@ int main(void)
     }
 
     // Nested loops
-    for (int i = 1; i <= 3; i++){
-        for (int j = 1; j <= 3; j++){
+    for (int i = 1; i <= 3; i++)
+    {
+        for (int j = 1; j <= 3; j++)
+        {
             printf("(%d,%d) ", i, j);
         }
         printf("\n");
@@ -383,6 +399,12 @@ int main(void)
     int castInt = (int)3.99; // Truncates decimal, becomes 3
 
     // Parsing Strings to Numbers
+    // atoi() -> string → int
+    // atof() -> string → double
+    // strtol() -> string → long, safer
+    // strtod() -> string → double, safer
+    // snprintf() -> number/data → string
+
     // Method 1: atoi() / atof() - Fast but unsafe (cannot distinguish '0' from error)
     char *numStr = "404";
     char str_num[] = "42";
@@ -432,7 +454,8 @@ int main(void)
     demonstratePassByReference(&originalRef);
     printf("After passByReference: %d (changed!)\n", originalRef); // becomes 999
 
-    // Array pass (decays to pointer)
+    // Array pass (decays to pointer) means -> When you pass an array to a function
+    // C automatically turns the array into a pointer to its first element
     int numArray[] = {1, 2, 3, 4, 5};
     printf("\nArray before: [%d, %d, %d, %d, %d]\n",
            numArray[0], numArray[1], numArray[2], numArray[3], numArray[4]);
@@ -452,12 +475,14 @@ int main(void)
 // 12. FUNCTION DEFINITIONS
 // ==========================================
 
-void some_function(void){
+void some_function(void)
+{
     // returns nothing
 }
 
 // Function definition - actual implementation
-int add(int a, int b){
+int add(int a, int b)
+{
     // Variables declared inside function are local
     int sum = a + b;
     return sum;
@@ -465,28 +490,33 @@ int add(int a, int b){
 
 // Pass by Value
 // 'val' is a local copy created on this function's stack frame.
-void demonstratePassByValue(int val){
+void demonstratePassByValue(int val)
+{
     val = 999; // Only modifies the local copy of val
     printf("Inside function (pass by value): %d\n", val);
 }
 
 // Pass by Reference (Via Pointers)
 // 'ptr' is a local pointer, but it points to the original variable's memory address.
-void demonstratePassByReference(int *ptr){
+void demonstratePassByReference(int *ptr)
+{
     *ptr = 999; // Dereferencing '*' modifies the actual value at the memory address
     printf("Inside function (pass by reference): %d\n", *ptr);
 }
 
 // Array parameter (decays to pointer, can modify original)
-void demonstrateArrayPass(int arr[]){
+void demonstrateArrayPass(int arr[])
+{
     arr[0] = 999; // Modifies original array
     printf("Inside function (array modified): [%d, ...]\n", arr[0]);
 }
 
 // Function with variable length array parameter
-int sumAll(int numbers[], int count){
+int sumAll(int numbers[], int count)
+{
     int total = 0;
-    for (int i = 0; i < count; i++){
+    for (int i = 0; i < count; i++)
+    {
         total += numbers[i];
     }
     return total;
