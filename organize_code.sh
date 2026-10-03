@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Script to organize code files into markdown format with proper code blocks
 # Usage: ./organize_code.sh <source_directory>
 
