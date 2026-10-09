@@ -1,4 +1,3 @@
-# wsl -u root
 # built-in Python module that provides access to the Python interpreter and system-level information.
 import sys 
 def main():

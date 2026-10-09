@@ -1,0 +1,5 @@
+Searching, sorting, recursion, complexity
++ Algorithms and problem-solving techniques
++ data structures, competitive programming, and algorithm design
+
+
