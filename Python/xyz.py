@@ -284,11 +284,9 @@ def modify_data(num: int, arr: list) -> list:
     # 'num' is an int (immutable). This assignment points the local 'num' to a new int object.
     # Original integer remains completely unaffected.
     num = 999 
-    
     # 'arr' is a list (mutable). .append() modifies the object dynamically on the heap.
     # The caller will see this mutation.
     arr.append(4) 
-    
     return arr
 
 # Function with return value
@@ -331,7 +329,6 @@ print(f"greet('Bob', 'Hi'): {greet('Bob', 'Hi')}")
 def sum_all(*numbers: int) -> int:
     return sum(numbers)
 
-    
 # Execution Flow entry point mapping (Similar to public static void main)
 # 'sys.argv' contains command line arguments.
 if __name__ == "__main__":

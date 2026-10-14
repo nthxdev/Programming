@@ -13,9 +13,6 @@ def count_occurence():
     for char in li:
         dic[char] += 1
 
-# Find sum and average of list element 
-def sum_average_of_list():
-    pass
 
 # find last element of list
 def last_elem_of_list():
@@ -62,6 +59,23 @@ def concate_list():
     # sort the list
     li1.sort()
     print(f"After Sort: {li1}")
+
+
+# Find the sum and average of list elements 
+def sum_avg_list():
+    li = input("Enter a list: ").split()
+    sum = 0
+    for num in li:
+        if num >= "0" and num <= "9":
+            sum += int(num)
+        else:
+            print("Only numbers are allowed")
+            break
+    else:
+        size = len(li)
+        print(f"Sum of {li} = {sum}")
+        print(f"Average is = {sum / size}")
+
 
 # Get unique elements from list
 def get_unique_elem():
@@ -154,6 +168,38 @@ def list_to_dict():
         d[keys[i]] = values[i]
     print(d)
 
+# sort a list
+li = [5, 2, 8, 1, 3]
+for i in range(len(li)):
+    for j in range(len(li) - 1 - i):
+        if li[j] > li[j + 1]:
+            li[j], li[j + 1] = li[j + 1], li[j]
+print(li)
+
+# Convert a list of tuples into a dictionary
+def dict_from_tuple_list():
+    li = [("a", 1), ("b", 2), ("c", 3)]
+    # d = dict(li)
+    # print(d)
+    # without dict()
+    d = {}
+    for key, value in li:
+        d[key] = value
+    print(d)
+
+# Sort a dictionary by value
+def sort_dict():
+    d = {"a": 30, "b": 10, "c": 20}
+    items = list(d.items())
+    for i in range(len(items)):
+        for j in range(len(items) - 1 - i):
+            if items[j][1] > items[j + 1][1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
+    result = {}
+    for key, value in items:
+        result[key] = value
+    print(result)
+
 # Perform set operations: union, intersection, difference, and symmetric difference
 # Python Operators have different meanings depending on the data type - 5 | 3(bitwise), {1, 2} | {2, 3}(Union on set)
 def set_operation():
@@ -172,4 +218,19 @@ def set_operation():
     print("Difference:", difference)
     print("Symmetric Difference:", symmetric_difference)
 
-
+# program that removes duplicates from a list
+# function to reverse a list
+# create tuple and access it element
+# convert list to tuple and vice versa
+# merge dictionaries
+# safly check key or val in collection
+# function to find common elem in two lists
+# function to capitalize the first letter of each word in a string
+# create dict and iterate over it keys values
+# write a function to flatten a nested list
+# nested dictionary to represent student records
+# write function to rotate a list left by K positions
+# write function to find missing number from a list of 1 to N
+# program to remove all None values from a list
+# write a function to merge two dictionaries and handle key collisions by summing values
+# create a function to find unique elements present in only one of two lists

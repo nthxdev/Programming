@@ -1,0 +1,27 @@
+# sorting algo visualized - a-z , char , ascii binary 0-9
++ upper bound , lower bound
++ worst case , best case 
+
+DSA , CP DP , competetive , recusrion, 
+
+
+sort the any ds on tree like structure -  - `log base^2*n`
+backtracking and more stuff 
+
++ understand optimization parameter 
+
+
+# computational thinking
+
+# Analogy: less finger to count all the way - less base
+# unary - computer are binary
+
+# bit - 0 or 1
+# byte - 8 bits
+
+# `base^position*position_num`
+
+# globally set standard for computer - letter associated with nums so same can be used they programed to do so - where it stored or this a formula?
+# the difference between an uppercase and lowercase is of 32 so flip one bit changes it
+
+# color - RGB - 0-255

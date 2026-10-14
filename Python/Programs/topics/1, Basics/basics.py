@@ -4,27 +4,25 @@ import keyword
 import random
 from enum import Enum
 
+# In python much easier due to tuple packing/unpacking happens internally
+"""
+Packing
+t = 1, 2, 3
+This becomes: (1, 2, 3)
+
+Unpacking
+a, b, c = (1, 2, 3)
+"""
+
 # add Two Numbers
 def add_two_numbers():
     num1 = int(input("Enter num1: "))
     num2 = int(input("Enter num2: "))
     print(f"Sum of {num1} and {num2} is {num1+num2}")
-    # much better
-    # map() applies a function to every item in a list.
-    # num1, num2 = map(int, input("Enter numbers: ").split())
-    # print(f"Sum of {num1} and {num2} is {num1 + num2}")
+
 
 # Swap two Variables
 def swap_two_variables():
-    # In python much easier due to tuple packing/unpacking happens internally
-    """
-    Packing
-    t = 1, 2, 3
-    This becomes: (1, 2, 3)
-
-    Unpacking
-    a, b, c = (1, 2, 3)
-    """
     a=int(input("Enter: "))
     b=int(input("Enter: "))
     print(f"Before swap -> {a,b}")
@@ -80,7 +78,7 @@ def add_pattern():
 #     pattern = " + ".join(terms)
 #     print(f"Pattern is {pattern}")
 
-# Add Pattern for n = 5; => n + nn + nnnn + nn + n + nnnn + nnn + nn + n 
+# Add Pattern for e.g -> n = 5 -> n + nn + nnnn + nn + n + nnnn + nnn + nn + n 
 def add_pattern_2():
     num = int(input("Enter a num: " ))
     list = [1, ]

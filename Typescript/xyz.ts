@@ -509,7 +509,7 @@ arr1.find((num) => num < 5); //  returns the value of the first element in the p
 arr1.findIndex((num) => num > 7); // returns the index of the first element in the array that satisfies the provided testing function. Otherwise, it returns -1, indicating that no element passed the test
 
 // Array Transformation: Some methods are (pure), meaning that they do not modify the original array
-
+  
 // map (pure)
 // Create a new array by transforming each element according to a function passed as an argument. These callback functions are often written as arrow functions
 console.log(arr1.map((value) => value - 1));

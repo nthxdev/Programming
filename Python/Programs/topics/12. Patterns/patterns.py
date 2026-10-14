@@ -44,6 +44,9 @@ def hollow_square():
                 print(" ", end=" ")
         print()
 
+# program to print pattern of stars in a triangle
+
+
 def main():
     while True:
         choice=input(
