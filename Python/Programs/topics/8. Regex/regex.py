@@ -1,5 +1,5 @@
-
-# --- REGEX ---
+import re
+# ==== REGEX ====
 # USES FINITE STATE MACHINE NON DETERMISTIC FINITE AUTOMATION
 # . any char expect newline
 # * 0 or more repetitions
@@ -31,28 +31,17 @@
 # r"^\w+@(\w+\.)?\w+\.edu$"
 # complete pattern email - ^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$
 
-# --- FORMAT.PY---
-# import re
-# name = input().strip()
-# matches = re.search(r"^(.+), (.+)$", name)
-# if matches:
-#     last, first = matches.groups()
-#     name=f"{first} {last}"
-# -- OR ---
-# name = matches.group(2) + " " + matches.group(1)
-# --- EVEN BETTER USING WALRUS OPERATOR ---
-# if matches := re.search(r"^(.+),, *(.+)$", name):
-# --- ALSO ---
-# name = input().strip()
-# if "," in name:
-#     last, first = name.split(",|?")
-#     name = f"{first} {last}"
-# print(f"hello, {name}")
-
-# --- RETURN FROM FUNCTION & THAN WE CAN USE UNPACKING TO GET VALUE IN VARS ---
-
-# url = input("url: ").strip()
-# username = url.replace("https://twitter.com/", "")
-# --- OR ---
-# username = re.sub(r"^(https?://)?(www\.)?twitter\.com/", "", url)
+def regexes():
+    name = input().strip()
+    matches = re.search(r"^(.+), (.+)$", name)
+    if matches:
+        name = matches.group(2) + " " + matches.group(1)
+    # Even Better using Walrus Operator -> walrus operator := assigns a value to a variable and uses that value in the same expression ====
+    if matches := re.search(r"^(.+),, *(.+)$", name):
+    if "," in name:
+        last, first = name.split(",|?")
+        name = f"{first} {last}"
+    print(f"hello, {name}")
+    url = input("url: ").strip()
+    username = re.sub(r"^(https?://)?(www\.)?twitter\.com/", "", url)
 

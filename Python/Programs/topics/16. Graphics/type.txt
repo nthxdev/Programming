@@ -1,1 +1,0 @@
-OpenGL and Manim are not interchangeable. Manim focuses on creating animations; OpenGL focuses on rendering graphics through a graphics API. You can use them together in your wider graphics-learning journey, but they should be separate projects.

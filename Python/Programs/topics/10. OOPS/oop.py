@@ -1,6 +1,7 @@
-
-
-# ===============================================
+# Classes, iterators, generators, enums
+# Inheritance, composition
+#  Magic Methods 
+# composition
 # get_student(): -> return {"name": name, "house": house}
 # student = get_student()
 # -- OOPS IS BETTER HERE ---

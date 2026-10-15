@@ -1,3 +1,4 @@
+# Note: Python strings use Unicode. ASCII is only a subset of Unicode, so the character-code exercise should distinguish `ord()`/`chr()` from ASCII-only validation
 # find length of stringg
 def string_length():
     string = input("Enter a string: ")

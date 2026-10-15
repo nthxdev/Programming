@@ -1,2 +1,0 @@
-Text processing, Unicode, regex
-Note: Python strings use Unicode. ASCII is only a subset of Unicode, so the character-code exercise should distinguish `ord()`/`chr()` from ASCII-only validation.
