@@ -7,6 +7,7 @@ base = Path(__file__).resolve().parent
 def main():
     class FileOperationError(Exception):
         """Custom exception for file-handling errors."""
+        
     # Create a safe workspace for this demonstration.
     with tempfile.TemporaryDirectory() as temp_dir:
         base = Path(temp_dir)

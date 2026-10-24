@@ -198,3 +198,25 @@ def find_ascii():
 # Program to display the ASCII value of a character
 # Convert decimal number to biary using loops
 
+
+def main():
+    while True:
+        show_menu()
+        choice = input("Enter your choice: ").strip().lower()
+
+        if choice == "q":
+            print("Exiting...")
+            break
+
+        program=PROGRAMS.get(choice)
+        if program is None:
+            print("Invalid choice. Please select valid choice or q to quit.")
+            continue
+        try:
+            program()
+        except Exception as e:
+            print(f"Program failed: {exc}")
+
+if __name__ == "__main__":
+    main()
++

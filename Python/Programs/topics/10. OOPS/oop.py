@@ -2,6 +2,9 @@
 # Inheritance, composition
 #  Magic Methods 
 # composition
+# dunner methods
+
+
 # get_student(): -> return {"name": name, "house": house}
 # student = get_student()
 # -- OOPS IS BETTER HERE ---
