@@ -2,7 +2,6 @@
 #include <stdlib.h>  // Standard library (malloc, free, strtol, atoi)
 #include <stdbool.h> // Boolean support (true, false)
 #include <string.h>  // String manipulation (strcpy, strlen)
-#include <cs50.h>
 
 // ==========================================
 // 13. FUNCTION DECLERATION (PROTOTYPES)
