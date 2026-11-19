@@ -123,13 +123,12 @@ console.log(`typeof inferred is: ${typeof inferred}`);
 let valueAny: any = "123";
 let numType: number = parseInt(valueAny);
 
-// Type assertion syntax
+// Type assertion syntax:
 // don't know type of strAny so to use it we need to later give it type
 const strAny: any = "hello";
 // as: tells typescript that strAny is a string or treat it as a string
 let length1: number = (strAny as string).length;
-// or using angle brackets
-// same thing as above just different syntax without using - as
+// or using angle brackets - same thing as above just different syntax without using - as
 let length2: number = (<string>strAny).length;
 
 // Safely check types - better way
@@ -240,11 +239,8 @@ let unknownVar: unknown = 42; // Type-safe counterpart to `any`. Requires type c
 console.log(`unknown: ${unknownVar}`);
 
 // 3. never - The bottom type. Represents the empty set of values—used for functions that never return (throw errors/infinite loops) or exhaustive switch matching.
-// Represents values that never occur (e.g., function that always throws)
+// Represents values that never occur (e.g., mainly used for functions that never successfully retur)
 // never is not normally declared as a standalone variable
-// let neverVar: never;
-// Normally, we don't use never as a variable
-// mainly used for functions that never successfully return
 function getNever(): never {
   throw new Error("Something went wrong");
 }
@@ -256,9 +252,9 @@ try {
 }
 
 // 4. void - Represents the absence of a return value from a function. Resolves to undefined at runtime.
-const log = (): void => {};
-console.log(log()); // undefined
-console.log(`void: `, typeof log()); // "undefined"
+const logs = (): void => {};
+console.log(logs()); // undefined
+console.log(`void: `, typeof logs()); // "undefined"
 
 // 5. Destructuring assignment ts perform type inference here
 const [destructX, destructY] = [10, 20];
@@ -279,7 +275,7 @@ type direction = "left" | "right";
 let literalType: direction = "left"; // or "right"
 
 // 7. Type Alias
-//  create reusable custom types
+// create reusable custom types
 // gives a name to any type
 type ID = string | number;
 const aliasType1: ID = 123;
@@ -308,16 +304,8 @@ interface User {
 // Tuples (TS specific): Fixed-length array with predefined types at each index.
 let myTuple: [string, number, boolean] = ["Bob", 25, true];
 console.log(`Tuple: ${JSON.stringify(myTuple)}`);
-type StringNumberTuple = [string, number];
-const tuple1: StringNumberTuple = ["hello", 42];
-const tuple2: [string, number, boolean] = ["test", 100, true];
-// Optional tuple elements
-type OptionalTuple = [string, number?];
-const optional1: OptionalTuple = ["name"];
-const optional2: OptionalTuple = ["name", 25];
-// Variadic tuples (rest elements)
-type StringNumberRest = [string, ...number[]];
-const variadic: StringNumberRest = ["id", 1, 2, 3];
+// Optional tuple elements + Variadic tuples (rest elements)
+type StringNumberTuple = [string, number, boolean?, ...number[]];
 // Readonly tuples
 type ReadonlyTup = readonly [string, number];
 const readonlyTuple: ReadonlyTup = ["frozen", 99];
@@ -361,6 +349,7 @@ enum Mixed {
   No = 0,
   Yes = "YES",
 }
+
 // ==========================================
 // Runtime (Structural) Types
 // ==========================================
